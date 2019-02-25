@@ -1,0 +1,43 @@
+name: common
+version: 1.0
+lang: go
+exec: main
+steps:
+  webhook_get@1.0.0:
+    description: Performs a GET webhook
+    inputs:
+      Url:
+        required: true
+        description: ""
+        sample:
+    outputs:
+      ResponseBody:
+        description: ""
+        sample:
+  webhook_post@1.0.0:
+    description: Posts a webhook
+    inputs:
+      Body:
+        required: true
+        description: ""
+      ContentType:
+        required: true
+        description: ""
+      Url:
+        required: true
+        description: ""
+    outputs:
+      ResponseBody:
+        description: ""
+  filter@1.0:
+    inputs:
+      Records:
+        required: true
+        description: The list of records you would like to filter
+      Filter:
+        required: true
+        description: The filter you would like to apply. The filter must be in javascript format. Referencing the record must start with `record`
+        sample: record.firstName == 'matthew'
+    outputs:
+      Records:
+        description: The filtered records
