@@ -3,7 +3,7 @@ version: 1.0
 lang: go
 exec: main
 steps:
-  webhook_get@1.0.0:
+  webhook_get@1.0:
     description: Performs a GET webhook
     inputs:
       Url:
@@ -14,7 +14,7 @@ steps:
       ResponseBody:
         description: ""
         sample:
-  webhook_post@1.0.0:
+  webhook_post@1.0:
     description: Posts a webhook
     inputs:
       Body:

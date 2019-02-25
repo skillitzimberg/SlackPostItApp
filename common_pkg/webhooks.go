@@ -34,7 +34,7 @@ func (PostWebhook) Description() string {
 }
 
 func (PostWebhook) Version() string {
-	return "1.0.0"
+	return "1.0"
 }
 
 func (PostWebhook) Execute() {
@@ -56,7 +56,7 @@ func (GetWebhook) Description() string {
 }
 
 func (GetWebhook) Version() string {
-	return "1.0.0"
+	return "1.0"
 }
 
 func (GetWebhook) Execute() {

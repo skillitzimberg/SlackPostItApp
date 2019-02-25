@@ -8,7 +8,7 @@ exec: main
 
 #The steps in this package
 steps:
-  google_sheets_read@1.0:
+  read@1.0:
     description: Read from a google sheet
     inputs:
       SpreadsheetId:

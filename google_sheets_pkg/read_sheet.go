@@ -11,7 +11,7 @@ type ReadSheet struct {
 }
 
 func (ReadSheet) Name() string {
-	return "google_sheets_read"
+	return "read"
 }
 
 func (ReadSheet) Version() string {
