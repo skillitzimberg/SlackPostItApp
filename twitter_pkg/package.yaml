@@ -20,6 +20,14 @@ steps:
         required: true
         description: "Your twitter API account AccessTokenSecret"
         sample: "jhf78d/lkgjdsfkdsjf ldksjfsfu34fn38faefjasdhkf"
+      ConsumerKey:
+        required: true
+        description: "Your twitter API account Consumer Key"
+        sample: "jhf78d/lkgjdsfkdsjf ldksjfsfu34fn38faefjasdhkf"
+      ConsumerSecret:
+        required: true
+        description: "Your twitter API account ConsumerSecret key"
+        sample: "jhf78d/lkgjdsfkdsjf ldksjfsfu34fn38faefjasdhkf"
     outputs:
       Success:
         description: "A boolean that tells you if your tweet was successfully

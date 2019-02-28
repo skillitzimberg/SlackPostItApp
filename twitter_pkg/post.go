@@ -25,8 +25,8 @@ func (Tweet) Execute() {
 	credentials := Credentials{
 		AccessToken: input.AccessToken,
 		AccessTokenSecret: input.AccessTokenSecret,
-		ConsumerKey: "I5UseC18M5siiqXWmlPAsLhj0",
-		ConsumerSecret: "Q3Lb57NS9Zhf1KjbzY0vzEq6CgwNhtQhoNd8aCriiDeWA0ZqC3",
+		ConsumerKey: input.ConsumerKey,
+		ConsumerSecret: input.ConsumerSecret,
 	}
 
 	client, err := GetUserClient(&credentials)
@@ -81,6 +81,8 @@ type TweetInput struct {
 	Text string
 	AccessToken string
 	AccessTokenSecret string
+	ConsumerKey string
+	ConsumerSecret string
 }
 
 type TweetOutput struct {
