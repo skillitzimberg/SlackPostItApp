@@ -1,0 +1,17 @@
+name: oracle
+version: 1.0
+lang: go
+exec: main
+steps:
+  select@1.0:
+    description: Performs a SELECT query
+    inputs:
+      ConnectionString:
+        required: true
+        sample: "oracle://user:passw@service_name OR user/passw@service_name OR advanced connection user/pass@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=hostname)(PORT=port)))(CONNECT_DATA=(SERVICE_NAME=sn)))"
+      Query:
+        required: true
+        sample: 'SELECT firstName, lastName FROM PERSON';
+    outputs:
+      Results:
+        description: "The records returned from the query."
