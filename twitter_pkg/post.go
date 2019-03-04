@@ -35,14 +35,11 @@ func (Tweet) Execute() {
 		log.Println(err)
 	}
 
-	tweet, resp, err := client.Statuses.Update(
+	_, _, err = client.Statuses.Update(
 		input.Text, nil)
 	if err != nil {
 		log.Println(err)
 	}
-
-	log.Printf("%+v\n", resp)
-	log.Printf("%+v\n", tweet)
 
 	output.Success = true
 	step.SetOutput(output)
@@ -68,12 +65,11 @@ func GetUserClient(credentials *Credentials) (*twitter.Client, error){
 		IncludeEmail: twitter.Bool(true),
 	}
 
-	user, _, err := client.Accounts.VerifyCredentials(verifyParams)
+	_, _, err := client.Accounts.VerifyCredentials(verifyParams)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("User's Account:\n%+v\n", user)
 	return client, nil
 }
 
