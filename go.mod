@@ -2,7 +2,7 @@ module util
 
 require (
 	github.com/apptreesoftware/go-workflow v0.0.0-20190225192338-64b89804fe2b
-	github.com/pkg/errors v0.8.1 // indirect
+	github.com/lib/pq v1.0.0
 	github.com/robertkrimen/otto v0.0.0-20180617131154-15f95af6e78d
 	golang.org/x/oauth2 v0.0.0-20181203162652-d668ce993890
 	golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e // indirect
