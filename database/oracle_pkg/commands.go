@@ -40,7 +40,7 @@ func (InsertBatch) Version() string {
 func (InsertBatch) Execute() {
 	input := &db_common.InsertCommand{}
 	step.BindInputs(input)
-	db, err := sql.Open("postgres", input.ConnectionString)
+	db, err := sql.Open("goracle", input.ConnectionString)
 	step.ReportError(err)
 	err = db_common.PerformInsertAll(db, input)
 	step.ReportError(err)
