@@ -41,7 +41,7 @@ steps:
     outputs:
       Records:
         description: The filtered records
-  file_fetch@1.0:
+  file_read_lines@1.0:
     inputs:
       FilePath:
         required: true

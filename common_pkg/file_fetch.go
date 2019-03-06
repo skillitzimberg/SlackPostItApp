@@ -22,7 +22,7 @@ type FetchFile struct {
 }
 
 func (FetchFile) Name() string {
-	return "file_fetch"
+	return "file_read_lines"
 }
 
 func (FetchFile) Description() string {
