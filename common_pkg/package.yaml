@@ -52,9 +52,6 @@ steps:
       UseHeaderAsFieldNames:
         required: true
         description: A flag indicating whether or not field names are being passed in or parsed from the file headers.
-      IgnoreFirstRow:
-        required: false
-        description: A flag indicating if the first row should be parsed as a record. This is assumed to be false if using the header as field names.
       FieldDelimiter:
         required: true
         description: The string delimiter used to separate fields in a line
