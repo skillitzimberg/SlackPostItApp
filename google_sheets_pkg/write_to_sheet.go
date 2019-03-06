@@ -30,7 +30,6 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 		return err
 	}
 	client := conf.Client(context.Background())
-
 	service := spreadsheet.NewServiceWithClient(client)
 	googleSheet, err := service.FetchSpreadsheet(input.SpreadsheetId)
 	if err != nil {
@@ -41,12 +40,23 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 		return err
 	}
 
-	for k, v := range input.Fields {
-		cellVal := input.Record[v]
-		sheet.Update(0, k, cellVal)
+	// Row names defauls to Record name is user doesn't pass in fields
+	var fields []string
+	if input.Fields != nil && len(input.Fields) != 0 {
+		fields = input.Fields
+	} else {
+		for k := range input.Record {
+			fields = append(fields, k)
+		}
 	}
-	err = sheet.Synchronize()
+	data := sheet.Properties.GridProperties
+	newRow := data.RowCount + 1
+	for k, v := range fields {
+		cellVal := input.Record[v]
+		sheet.Update(int(newRow),k,cellVal)
+	}
 
+	err = sheet.Synchronize()
 	return err
 }
 
