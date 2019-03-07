@@ -9,6 +9,7 @@ func main() {
 	step.Register(GetWebhook{})
 	step.Register(Filter{})
 	step.Register(StringLengthCounter{})
+	step.Register(FetchFile{})
 
 	step.Run()
 }
