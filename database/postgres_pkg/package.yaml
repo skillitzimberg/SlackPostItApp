@@ -34,3 +34,20 @@ steps:
     outputs:
       Results:
         description: "The records returned from the query."
+  query_and_queue@1.0:
+    description: "Performs a SELECT query. All rows returned will get queued to run as part of another workflow"
+    inputs:
+      ConnectionString:
+        required: true
+        sample: "postgres://user:passw@localhost:5432"
+        description: "Postgres Connection string"
+      Sql:
+        required: true
+        description: ""
+      Workflow:
+          required: true
+          description: "The workflow you want to run. This workflow must be part of your project"
+          sample: "process_results"
+    outputs:
+      Results:
+        description: "The records returned from the query."

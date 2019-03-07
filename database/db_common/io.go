@@ -7,6 +7,12 @@ type DatabaseCommand struct {
 	Sql              string
 }
 
+type DatabaseCommandToQueue struct {
+	ConnectionString string
+	Sql              string
+	Workflow         string
+}
+
 type RowOutput struct {
 	Results []map[string]interface{}
 }
