@@ -41,3 +41,20 @@ steps:
     outputs:
       Records:
         description: The filtered records
+  file_read_lines@1.0:
+    inputs:
+      FilePath:
+        required: true
+        description: The local file path that you would like to parse.
+      FieldNames:
+        required: false
+        description: The field names that will be used in mapping each line to an object. Can be omitted if using headers as field names.
+      UseHeaderAsFieldNames:
+        required: true
+        description: A flag indicating whether or not field names are being passed in or parsed from the file headers.
+      FieldDelimiter:
+        required: true
+        description: The string delimiter used to separate fields in a line
+    outputs:
+      Records:
+        description: Each line of the file as a list of map objects
