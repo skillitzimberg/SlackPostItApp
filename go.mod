@@ -1,7 +1,8 @@
 module util
 
 require (
-	github.com/apptreesoftware/go-workflow v0.0.0-20190225192338-64b89804fe2b
+	github.com/apptreesoftware/go-workflow v0.0.0-20190308175018-754114488859
+	github.com/json-iterator/go v1.1.5
 	github.com/lib/pq v1.0.0
 	github.com/robertkrimen/otto v0.0.0-20180617131154-15f95af6e78d
 	github.com/twitchtv/twirp v5.5.2+incompatible // indirect
@@ -12,6 +13,5 @@ require (
 	gopkg.in/Iwark/spreadsheet.v2 v2.0.0-20190213044300-aa3ac0c59139
 	gopkg.in/goracle.v2 v2.12.3
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
-
-replace github.com/apptreesoftware/go-workflow => ../go-workflow

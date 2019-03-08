@@ -7,7 +7,7 @@ import (
 	"gopkg.in/Iwark/spreadsheet.v2"
 )
 
-type WriteToSheet struct {}
+type WriteToSheet struct{}
 
 func (WriteToSheet) Name() string {
 	return "write"
@@ -18,7 +18,7 @@ func (WriteToSheet) Version() string {
 }
 
 func (w WriteToSheet) Execute() {
-	input := WriteToSheetInput {}
+	input := WriteToSheetInput{}
 	step.BindInputs(&input)
 	err := w.execute(input)
 	step.ReportError(err)
@@ -50,10 +50,10 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 		}
 	}
 	data := sheet.Properties.GridProperties
-	newRow := data.RowCount + 1
+	newRow := data.RowCount
 	for k, v := range fields {
 		cellVal := input.Record[v]
-		sheet.Update(int(newRow),k,cellVal)
+		sheet.Update(int(newRow), k, cellVal)
 	}
 
 	err = sheet.Synchronize()
@@ -65,5 +65,5 @@ type WriteToSheetInput struct {
 	SheetIndex    uint
 	Credentials   string
 	Fields        []string
-	Record map[string]string
+	Record        map[string]string
 }
