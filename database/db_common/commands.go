@@ -24,6 +24,23 @@ func PerformQuery(db *sql.DB, command DatabaseCommand) {
 	step.SetOutput(output)
 }
 
+func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue) {
+	rows, err := db.Query(command.Sql)
+	step.ReportError(err)
+	cols, err := rows.Columns()
+	step.ReportError(err)
+
+	engine := step.GetEngine()
+
+	defer rows.Close()
+	for rows.Next() {
+		rowMap, err := ScanIntoMap(rows, cols)
+		step.ReportError(err)
+		err = engine.AddToQueue(command.Workflow, rowMap)
+		step.ReportError(err)
+	}
+}
+
 func PerformInsertAll(db *sql.DB, command *InsertCommand) error {
 	if len(command.Records) == 0 {
 		return nil

@@ -10,6 +10,7 @@ func main() {
 	step.Register(Filter{})
 	step.Register(StringLengthCounter{})
 	step.Register(FetchFile{})
+	step.Register(ParseJsonObject{})
 
 	step.Run()
 }
