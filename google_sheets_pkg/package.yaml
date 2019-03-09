@@ -33,3 +33,29 @@ steps:
     outputs:
       Rows:
         description: "The output of each row"
+  write@1.0:
+    description: Write to a Google sheet
+    inputs:
+      SpreadsheetId:
+        required: true
+        description: "The ID of the Google Spreadsheet"
+        sample: XD23223211212
+      SheetIndex:
+        required: false
+        description: "The index of the sheet you want to use. Defaults to the first sheet."
+        sample: 0
+      Record:
+        required: true
+        description: "The record you'd like to write to google sheets"
+        sample: ""
+      Credentials:
+        required: true
+        description: "Your Google Sheets credentials JSON. To create your credentials see https://developers.google.com/sheets/api/quickstart/go"
+        sample: '{}'
+      Fields:
+        required: true
+        description: "The names of the fields in the order they are defined within the spreadsheet"
+        sample: |
+          - firstName
+          - lastName
+          - email
