@@ -2,9 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"db_common"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 	_ "gopkg.in/goracle.v2"
-	"util/database/db_common"
 )
 
 type Query struct {
@@ -23,7 +23,7 @@ func (Query) Execute() {
 	step.BindInputs(&input)
 	db, err := sql.Open("goracle", input.ConnectionString)
 	step.ReportError(err)
-	db_common.PerformQuery(db, input)
+	db_common_pkg.PerformQuery(db, input)
 }
 
 type InsertBatch struct {
