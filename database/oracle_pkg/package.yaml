@@ -1,8 +1,9 @@
 name: oracle
 version: 1.0
 lang: go
-exec: main.exe
-windows_exec: main
+exec:
+  windows:
+    amd64: main_windows_amd64.exe
 steps:
   insert_batch@1.0:
     description: "Accepts a list of records and inserts them into a database."

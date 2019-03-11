@@ -1,7 +1,13 @@
 name: filesystem
 version: 1.0
 lang: go
-exec: main
+exec:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
 file_read_lines@1.0:
   inputs:
     FilePath:

@@ -1,7 +1,13 @@
 name: common
 version: 1.0
 lang: go
-exec: main
+exec:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
 steps:
   filter@1.0:
     inputs:

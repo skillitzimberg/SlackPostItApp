@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
-	"github.com/apptreesoftware/step_library_go/database/db_common" // TODO: change `step_library_go` to `step_library` in path after merge, and run go get!
+	"github.com/apptreesoftware/step_library/database/db_common"
 	_ "github.com/lib/pq"
 )
 
@@ -28,7 +28,6 @@ func (Query) Execute() {
 
 type QueryAndQueue struct {
 }
-
 
 func (QueryAndQueue) Name() string {
 	return "query_and_queue"
