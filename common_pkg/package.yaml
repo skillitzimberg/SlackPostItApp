@@ -41,8 +41,6 @@ steps:
     outputs:
       Records:
         description: The filtered records
-<<<<<<< HEAD
-=======
   file_read_lines@1.0:
     inputs:
       FilePath:
@@ -69,5 +67,3 @@ steps:
     outputs:
       Record:
         description: The json object
-
->>>>>>> 6d441fbc29150306581342754dd905bb97313ca5

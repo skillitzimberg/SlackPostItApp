@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
+	"github.com/apptreesoftware/step_library_go/database/db_common"
 	_ "github.com/lib/pq"
-	"util/database/db_common"
 )
 
 type Query struct {
