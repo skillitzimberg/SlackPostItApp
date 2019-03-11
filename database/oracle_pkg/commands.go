@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
-	"github.com/apptreesoftware/step_library_go/database/db_common"
+	"github.com/apptreesoftware/step_library_go/database/db_common" // TODO: change `step_library_go` to `step_library` in path after merge, and run go get!
 	_ "gopkg.in/goracle.v2"
 )
 
