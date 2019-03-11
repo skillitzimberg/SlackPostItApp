@@ -5,9 +5,8 @@ import (
 )
 
 func main() {
-	step.Register(Filter{})
-	step.Register(StringLengthCounter{})
-	step.Register(SliceString{})
+	step.Register(PostWebhook{})
+	step.Register(GetWebhook{})
 
 	step.Run()
 }

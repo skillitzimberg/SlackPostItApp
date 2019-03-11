@@ -3,32 +3,6 @@ version: 1.0
 lang: go
 exec: main
 steps:
-  webhook_get@1.0:
-    description: Performs a GET webhook
-    inputs:
-      Url:
-        required: true
-        description: ""
-        sample:
-    outputs:
-      ResponseBody:
-        description: ""
-        sample:
-  webhook_post@1.0:
-    description: Posts a webhook
-    inputs:
-      Body:
-        required: true
-        description: ""
-      ContentType:
-        required: true
-        description: ""
-      Url:
-        required: true
-        description: ""
-    outputs:
-      ResponseBody:
-        description: ""
   filter@1.0:
     inputs:
       Records:
@@ -41,29 +15,26 @@ steps:
     outputs:
       Records:
         description: The filtered records
-  file_read_lines@1.0:
+  string_length@1.0:
     inputs:
-      FilePath:
+      Text:
         required: true
-        description: The local file path that you would like to parse.
-      FieldNames:
+        description: A string you'd like the length of
+    outputs:
+      Count:
+        description: the length of the string
+  slice@1.0:
+    inputs:
+      Text:
+        required: true
+        description: A string you'd like to slice
+      StartIndex:
+        required: true
+        description: The index to start slicing at
+      EndIndex:
         required: false
-        description: The field names that will be used in mapping each line to an object. Can be omitted if using headers as field names.
-      UseHeaderAsFieldNames:
-        required: true
-        description: A flag indicating whether or not field names are being passed in or parsed from the file headers.
-      FieldDelimiter:
-        required: true
-        description: The string delimiter used to separate fields in a line
+        description: defaults to string.length
     outputs:
-      Records:
-        description: Each line of the file as a list of map objects
-  parse_json_object@1.0:
-    inputs:
-      String:
-        required: true
-        description: The string to parse into a json object
-        samp: '{"key" : "value"}'
-    outputs:
-      Record:
-        description: The json object
+      Text:
+        description: The new string
+

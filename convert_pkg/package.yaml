@@ -1,0 +1,13 @@
+name: convert
+version: 1.0
+lang: go
+exec: main
+parse_json_object@1.0:
+  inputs:
+    String:
+      required: true
+      description: The string to parse into a json object
+      samp: '{"key" : "value"}'
+  outputs:
+    Record:
+      description: The json object
