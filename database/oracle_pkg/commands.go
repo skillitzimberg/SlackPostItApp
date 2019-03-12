@@ -45,3 +45,22 @@ func (InsertBatch) Execute() {
 	err = db_common.PerformInsertAll(db, input)
 	step.ReportError(err)
 }
+
+type QueryAndQueue struct {
+}
+
+func (QueryAndQueue) Name() string {
+	return "query_and_queue"
+}
+
+func (QueryAndQueue) Version() string {
+	return "1.0"
+}
+
+func (QueryAndQueue) Execute() {
+	input := db_common.DatabaseCommandToQueue{}
+	step.BindInputs(&input)
+	db, err := sql.Open("goracle", input.ConnectionString)
+	step.ReportError(err)
+	db_common.PerformQueryAndQueue(db, input)
+}

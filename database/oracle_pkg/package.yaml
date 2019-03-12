@@ -35,3 +35,21 @@ steps:
     outputs:
       Results:
         description: "The records returned from the query."
+  query_and_queue@1.0:
+    description: "Performs a SELECT query. All rows returned will get queued to run as part of another workflow"
+    inputs:
+      ConnectionString:
+        required: true
+        sample: "oracle://user:passw@service_name OR user/passw@service_name OR advanced connection user/pass@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=hostname)(PORT=port)))(CONNECT_DATA=(SERVICE_NAME=sn)))"
+        description: "Oracle Connection string"
+      Sql:
+        required: true
+        description: ""
+        sample: "SELECT * FROM myTable"
+      Workflow:
+        required: true
+        description: "The workflow you want to run. This workflow must be part of your project"
+        sample: "process_results"
+    outputs:
+      Results:
+        description: "The records returned from the query."
