@@ -3,7 +3,7 @@ version: 1.0
 
 runtime: go #the language the package is in
 
-exec:
+executables:
   linux:
     amd64: main_linux_amd64
   darwin:

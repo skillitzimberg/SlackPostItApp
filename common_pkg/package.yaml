@@ -1,7 +1,7 @@
 name: common
 version: 1.0
 lang: go
-exec:
+executables:
   linux:
     amd64: main_linux_amd64
   darwin:

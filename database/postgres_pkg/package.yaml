@@ -1,8 +1,13 @@
 name: postgres
 version: 1.0
 lang: go
-exec: main
-windows_exec: main
+executables:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
 steps:
   insert_batch@1.0:
     description: "Accepts a list of records and inserts them into a database."
