@@ -27,3 +27,12 @@ file_read_lines@1.0:
   outputs:
     Records:
       description: Each line of the file as a list of map objects
+  list_directory_contents@1.0:
+    inputs:
+      DirectoryPath:
+        required: true
+        description: The local file path that you would like to parse.
+    outputs:
+      Files:
+        description: A list of the files and directories found
+

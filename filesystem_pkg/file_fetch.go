@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+//read_lines_and_queue
+//list all files in directory
+//oracle/postgres insert_one
+
+
 type FetchFileInput struct {
 	FilePath              string
 	FieldNames            []string

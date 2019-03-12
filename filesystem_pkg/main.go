@@ -6,6 +6,7 @@ import (
 
 func main() {
 	step.Register(FetchFile{})
+	step.Register(ListDirectory{})
 
 	step.Run()
 }
