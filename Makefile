@@ -1,15 +1,12 @@
 all: build
-build: build-famis |
-		cd filesystem_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
+build: build-famis build-filesystem |
 		cd database/postgres_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 		cd google_sheets_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 		cd convert_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 		cd common_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
-		cd NetCoreSteps/Accruent.Famis.Steps && dotnet publish -o publish -c Release
 
 build-famis: |
 	cd NetCoreSteps/Accruent.Famis.Steps && dotnet publish -o publish -c Release
-
 build-filesystem: |
 	cd filesystem_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 buildoracle: |
@@ -30,8 +27,9 @@ publish: build |
 	apptree workflow package publish -d database/postgres_pkg
 	apptree workflow package publish -d convert_pkg
 	apptree workflow package publish -d common_pkg
-	apptree workflow package publish -d filesystem_pkg
 	apptree workflow package publish -d NetCoreSteps/Accruent.Famis.Steps/publish
 
 publish-famis: build-famis |
 	apptree workflow package publish -d NetCoreSteps/Accruent.Famis.Steps/publish
+publish-filesystem: build-filesystem |
+	apptree workflow package publish -d filesystem_pkg
