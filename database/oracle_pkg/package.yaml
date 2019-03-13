@@ -1,7 +1,7 @@
 name: oracle
 version: 1.0
 lang: go
-exec:
+executables:
   windows:
     amd64: main_windows_amd64.exe
 steps:
