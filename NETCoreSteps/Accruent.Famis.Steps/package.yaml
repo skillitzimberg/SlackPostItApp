@@ -1,0 +1,46 @@
+name: Accruent.Famis
+lang: NETCORE21
+version: '1.0'
+executables:
+  
+steps:
+  create_user@1.0:
+    description: ''
+    inputs:
+      Url:
+        required: true
+        description: FAMIS service url
+        sample: ''
+      Username:
+        required: true
+        description: FAMIS service username
+        sample: ''
+      Password:
+        required: true
+        description: FAMIS service password
+        sample: ''
+      User:
+        required: true
+        description: User to create or update
+        sample: ''
+    outputs:
+      Success:
+        description: True if the user was created successfully
+      User:
+        description: The newly created user. Will contain the ID of the user.
+      Message:
+        description: Contains the response message from the FAMIS services
+  create_user_mock@1.0:
+    description: ''
+    inputs:
+      User:
+        required: true
+        description: User to create or update
+        sample: ''
+    outputs:
+      Success:
+        description: True if the user was created successfully
+      User:
+        description: The newly created user. Will contain the ID of the user.
+      Message:
+        description: Contains the response message from the FAMIS services
