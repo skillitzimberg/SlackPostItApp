@@ -8,12 +8,13 @@ executables:
     amd64: main_darwin_amd64
   windows:
     amd64: main_windows_amd64.exe
-parse_json_object@1.0:
-  inputs:
-    String:
-      required: true
-      description: The string to parse into a json object
-      samp: '{"key" : "value"}'
-  outputs:
-    Record:
-      description: The json object
+steps:
+  parse_json_object@1.0:
+    inputs:
+      String:
+        required: true
+        description: The string to parse into a json object
+        samp: '{"key" : "value"}'
+    outputs:
+      Record:
+        description: The json object
