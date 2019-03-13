@@ -13,7 +13,7 @@ build-famis: |
 build-filesystem: |
 	cd filesystem_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 buildoracle: |
-	cd database/oracle_pkg && gox -osarch="windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
+	cd database/oracle_pkg && env CC=x86_64-w64-mingw32-gcc && gox -osarch="windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 clean: |
 	./scripts/clean_steps.sh
 updatesdk: |

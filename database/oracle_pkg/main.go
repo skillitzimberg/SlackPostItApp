@@ -7,5 +7,6 @@ import (
 func main() {
 	step.Register(Query{})
 	step.Register(InsertBatch{})
+	step.Register(QueryAndQueue{})
 	step.Run()
 }
