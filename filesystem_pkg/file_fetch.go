@@ -7,9 +7,7 @@ import (
 	"strings"
 )
 
-//read_lines_and_queue
 //oracle/postgres insert_one
-
 
 type FetchFileInput struct {
 	FilePath              string
