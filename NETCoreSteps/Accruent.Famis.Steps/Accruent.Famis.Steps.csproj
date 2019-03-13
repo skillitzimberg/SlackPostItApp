@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\go-workflow\csharp\StepCore\StepCore.csproj" />
+      <ProjectReference Include="..\Services\Banner\Banner.csproj" />
       <ProjectReference Include="..\Services\Famis\Famis.csproj" />
     </ItemGroup>
 

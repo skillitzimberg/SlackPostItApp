@@ -8,7 +8,7 @@ executables:
     amd64: Accruent.Famis.Steps.dll
   windows:
     amd64: Accruent.Famis.Steps.dll
-  
+    
 steps:
   create_user@1.0:
     description: ''
@@ -50,3 +50,45 @@ steps:
         description: The newly created user. Will contain the ID of the user.
       Message:
         description: Contains the response message from the FAMIS services
+  convert_banner_user@1.0:
+    description: Converts a Banner Requester to a Famis User.
+    inputs:
+      BannerUser:
+        required: true
+        description: The banner requester to convert
+        sample: ''
+      ProfileId:
+        required: true
+        description: The default profile id to apply to this user. This is a required field in FAMIS.
+        sample: ''
+      StateId:
+        required: true
+        description: The default State id to apply to this user. This is a required field in FAMIS
+        sample: ''
+      CountryId:
+        required: true
+        description: The default Country id to apply to this user. This is a required field in FAMIS
+        sample: ''
+      ActiveFlag:
+        required: true
+        description: The Active status of this user in FAMIS. This is a required field in FAMIS
+        sample: ''
+      CompanyId:
+        required: true
+        description: The default Company id to apply to this user. This is a required field in FAMIS
+        sample: ''
+      Addr1:
+        required: true
+        description: The default Street address to apply to this user. This is a required field in FAMIS
+        sample: ''
+      City:
+        required: true
+        description: The default City to apply to this user. This is a required field in FAMIS
+        sample: ''
+      Zip:
+        required: true
+        description: The default Zip to apply to this user. This is a required field in FAMIS
+        sample: ''
+    outputs:
+      FamisUser:
+        description: The converted famis user

@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using Famis;
 using Famis.Model;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using StepCore;
 
-namespace Accruent.Famis.Steps {
+namespace Accruent.Famis.Steps.Create {
     public abstract class UpsertUserBase : StepAsync {
         [Input(Description = "User to create or update")]
         public User User { get; set; }
@@ -19,7 +18,7 @@ namespace Accruent.Famis.Steps {
     
 
     [StepDescription("create_user")]
-    public class UpsertUser : UpsertUserBase {
+    public class CreateUser : UpsertUserBase {
         [Input(Description = "FAMIS service url")]
         public string Url { get; set; }
         [Input(Description = "FAMIS service username")]
@@ -38,7 +37,7 @@ namespace Accruent.Famis.Steps {
     }
 
     [StepDescription("create_user_mock")]
-    public class UpsertUserMock : UpsertUserBase {
+    public class CreateUserMock : UpsertUserBase {
         public override Task ExecuteAsync() {
             Success = true;
             UserResult = User;
