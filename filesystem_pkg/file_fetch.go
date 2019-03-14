@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-//oracle/postgres insert_one
-
 type FetchFileInput struct {
 	FilePath              string
 	FieldNames            []string

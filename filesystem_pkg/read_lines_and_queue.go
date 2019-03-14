@@ -20,15 +20,14 @@ func (ReadLinesAndQueue) Version() string {
 func (f ReadLinesAndQueue) Execute() {
 	input := ReadLinesAndQueueInput{}
 	step.BindInputs(&input)
-	out, err := f.execute(input)
+	err := f.execute(input)
 	step.ReportError(err)
-	step.SetOutput(out)
 }
 
-func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) (*ReadLinesAndQueueOutput, error) {
+func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) error {
 	file, err := os.Open(input.FilePath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer file.Close()
 
@@ -49,11 +48,13 @@ func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) (*ReadLinesAndQue
 		} else {
 			recordToQueue := ConvertToMap(fieldSlice, input.FieldNames)
 			records = append(records, recordToQueue)
-			engine.AddToQueue(input.Workflow, recordToQueue)
+			err := engine.AddToQueue(input.Workflow, recordToQueue)
+			if err != nil {
+				return err
+			}
 		}
 	}
-
-	return &ReadLinesAndQueueOutput{Records: records}, nil
+	return nil
 }
 
 type ReadLinesAndQueueInput struct {
@@ -64,6 +65,3 @@ type ReadLinesAndQueueInput struct {
 	Workflow              string
 }
 
-type ReadLinesAndQueueOutput struct {
-	Records []map[string]string
-}

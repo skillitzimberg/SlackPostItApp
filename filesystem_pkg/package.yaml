@@ -53,6 +53,4 @@ steps:
       Workflow:
         required: true
         description: The workflow that you want to queue up
-    outputs:
-      Records:
-        description: Each line of the file as a list of map objects
+    outputs: {}

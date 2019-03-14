@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Famis;
 using Famis.Model;
+using Newtonsoft.Json;
 using StepCore;
 
 namespace Accruent.Famis.Steps.Create {
@@ -41,6 +43,7 @@ namespace Accruent.Famis.Steps.Create {
         public override Task ExecuteAsync() {
             Success = true;
             UserResult = User;
+            Console.WriteLine(JsonConvert.SerializeObject(User));
             User.Id = 12345;
             Message = "User created successfully";
             return Task.CompletedTask;
