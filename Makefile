@@ -1,3 +1,7 @@
+HOST=https://io.apptreesoftware.com
+
+test: |
+	echo ${HOST}
 all: publish
 build: build-dotnet build-go |
 build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger
@@ -5,23 +9,23 @@ build-dotnet: build-famis
 build-postgres: |
 			cd database/postgres_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-postgres: build-postgres |
-	apptree workflow package publish -d database/postgres_pkg
+	apptree workflow package publish -d database/postgres_pkg --host ${HOST}
 build-googlesheets: |
 	cd google_sheets_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-googlesheets: build-googlesheets |
-	apptree workflow package publish -d google_sheets_pkg
+	apptree workflow package publish -d google_sheets_pkg --host ${HOST}
 build-convert: |
 	cd convert_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-convert: build-convert
-	apptree workflow package publish -d convert_pkg
+	apptree workflow package publish -d convert_pkg --host ${HOST}
 build-common: |
 	cd common_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-common: build-common |
-	apptree workflow package publish -d common_pkg
+	apptree workflow package publish -d common_pkg --host ${HOST}
 build-logger: |
 	cd logger_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-logger: build-logger |
-	apptree workflow package publish -d logger_pkg
+	apptree workflow package publish -d logger_pkg --host ${HOST}
 build-famis: |
 	cd NetCoreSteps/Accruent.Famis.Steps && dotnet publish -o publish -c Release
 publish-famis: build-famis |
@@ -29,11 +33,11 @@ publish-famis: build-famis |
 build-filesystem: |
 	cd filesystem_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-filesystem: build-filesystem |
-	apptree workflow package publish -d filesystem_pkg
+	apptree workflow package publish -d filesystem_pkg --host ${HOST}
 build-oracle: |
 	cd database/oracle_pkg && env CC=x86_64-w64-mingw32-gcc && gox -osarch="windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-oracle: build-oracle |
-	apptree workflow package publish -d database/oracle_pkg
+	apptree workflow package publish -d database/oracle_pkg --host ${HOST}
 updatesdk: |
 	cd filesystem_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd database/db_common && go mod tidy && go get github.com/apptreesoftware/go-workflow

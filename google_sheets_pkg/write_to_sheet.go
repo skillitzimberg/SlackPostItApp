@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 	"golang.org/x/oauth2/google"
 	"gopkg.in/Iwark/spreadsheet.v2"
@@ -53,7 +54,7 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 	newRow := data.RowCount
 	for k, v := range fields {
 		cellVal := input.Record[v]
-		sheet.Update(int(newRow), k, cellVal)
+		sheet.Update(int(newRow), k, fmt.Sprintf("%v", cellVal))
 	}
 
 	err = sheet.Synchronize()
@@ -65,5 +66,5 @@ type WriteToSheetInput struct {
 	SheetIndex    uint
 	Credentials   string
 	Fields        []string
-	Record        map[string]string
+	Record        map[string]interface{}
 }

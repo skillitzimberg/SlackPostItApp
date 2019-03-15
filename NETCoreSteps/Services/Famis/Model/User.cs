@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Newtonsoft.Json;
 
 namespace Famis.Model
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class User
     {
         public int? Id { get; set; }
