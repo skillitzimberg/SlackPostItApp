@@ -37,11 +37,15 @@ func (PostWebhook) Version() string {
 	return "1.0"
 }
 
-func (PostWebhook) Execute() {
+func (PostWebhook) Execute(ctx step.Context) (interface{}, error) {
 	input := PostWebhookInput{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
 	reader := strings.NewReader(input.Body)
-	handleResponse(http.Post(input.Url, input.ContentType, reader))
+	return handleResponse(http.Post(input.Url, input.ContentType, reader))
+
 }
 
 type GetWebhook struct {
@@ -59,24 +63,26 @@ func (GetWebhook) Version() string {
 	return "1.0"
 }
 
-func (GetWebhook) Execute() {
+func (GetWebhook) Execute(ctx step.Context) (interface{}, error) {
 	input := GetWebhookInput{}
-	step.BindInputs(&input)
-	handleResponse(http.Get(input.Url))
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	return handleResponse(http.Get(input.Url))
 }
 
-func handleResponse(resp *http.Response, err error) {
+func handleResponse(resp *http.Response, err error) (interface{}, error) {
 	if err != nil {
-		step.ReportError(err)
+		return nil, err
 	}
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			step.ReportError(err)
+			return nil, err
 		}
-		step.SetOutput(&WebhookOutput{ResponseBody: string(body)})
-	} else {
-		step.ReportError(fmt.Errorf("invalid response code %d", resp.StatusCode))
+		return &WebhookOutput{ResponseBody: string(body)}, nil
 	}
+	return nil, fmt.Errorf("invalid response code %d", resp.StatusCode)
 }

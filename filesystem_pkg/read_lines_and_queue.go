@@ -17,11 +17,14 @@ func (ReadLinesAndQueue) Version() string {
 	return "1.0"
 }
 
-func (f ReadLinesAndQueue) Execute() {
+func (f ReadLinesAndQueue) Execute(ctx step.Context) (interface{}, error) {
 	input := ReadLinesAndQueueInput{}
-	step.BindInputs(&input)
-	err := f.execute(input)
-	step.ReportError(err)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	err = f.execute(input)
+	return nil, err
 }
 
 func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) error {
@@ -64,4 +67,3 @@ type ReadLinesAndQueueInput struct {
 	FieldDelimiter        string
 	Workflow              string
 }
-

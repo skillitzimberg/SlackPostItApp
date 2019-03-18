@@ -33,12 +33,14 @@ func (FetchFile) Version() string {
 	return "1.0"
 }
 
-func (f FetchFile) Execute() {
-	input := FetchFileInput{}
-	step.BindInputs(&input)
-	out, err := f.execute(input)
-	step.ReportError(err)
-	step.SetOutput(out)
+func (f FetchFile) Execute(ctx step.Context) (interface{}, error) {
+	fileInput := FetchFileInput{}
+	err := ctx.BindInputs(&fileInput)
+	if err != nil {
+		return nil, err
+	}
+	out, err := f.execute(fileInput)
+	return out, err
 }
 
 func (FetchFile) execute(input FetchFileInput) (*FetchFileOutput, error) {

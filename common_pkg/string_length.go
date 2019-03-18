@@ -13,12 +13,15 @@ func (StringLengthCounter) Version() string {
 	return "1.0"
 }
 
-func (StringLengthCounter) Execute() {
+func (StringLengthCounter) Execute(ctx step.Context) (interface{}, error) {
 	input := StringLengthInput{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
 	output := StringLengthOutput{}
 	output.Count = len(input.Text)
-	step.SetOutput(output)
+	return output, nil
 }
 
 type StringLengthInput struct {

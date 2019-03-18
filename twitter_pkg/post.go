@@ -4,10 +4,9 @@ import (
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
-	"log"
 )
 
-type Tweet struct {}
+type Tweet struct{}
 
 func (Tweet) Name() string {
 	return "tweet"
@@ -17,42 +16,44 @@ func (Tweet) Version() string {
 	return "1.0"
 }
 
-func (Tweet) Execute() {
+func (Tweet) Execute(ctx step.Context) (interface{}, error) {
 	input := TweetInput{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
 	output := TweetOutput{}
 
 	credentials := Credentials{
-		AccessToken: input.AccessToken,
+		AccessToken:       input.AccessToken,
 		AccessTokenSecret: input.AccessTokenSecret,
-		ConsumerKey: input.ConsumerKey,
-		ConsumerSecret: input.ConsumerSecret,
+		ConsumerKey:       input.ConsumerKey,
+		ConsumerSecret:    input.ConsumerSecret,
 	}
 
 	client, err := GetUserClient(&credentials)
 	if err != nil {
-		log.Println("Error getting Twitter Client")
-		log.Println(err)
+		return nil, err
 	}
 
 	_, _, err = client.Statuses.Update(
 		input.Text, nil)
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
 
 	output.Success = true
-	step.SetOutput(output)
+	return output, nil
 }
 
 type Credentials struct {
-	ConsumerKey string
-	ConsumerSecret string
-	AccessToken string
+	ConsumerKey       string
+	ConsumerSecret    string
+	AccessToken       string
 	AccessTokenSecret string
 }
 
-func GetUserClient(credentials *Credentials) (*twitter.Client, error){
+func GetUserClient(credentials *Credentials) (*twitter.Client, error) {
 	config := oauth1.NewConfig(credentials.ConsumerKey,
 		credentials.ConsumerSecret)
 	token := oauth1.NewToken(credentials.AccessToken, credentials.AccessTokenSecret)
@@ -61,7 +62,7 @@ func GetUserClient(credentials *Credentials) (*twitter.Client, error){
 	client := twitter.NewClient(httpClient)
 
 	verifyParams := &twitter.AccountVerifyParams{
-		SkipStatus:twitter.Bool(true),
+		SkipStatus:   twitter.Bool(true),
 		IncludeEmail: twitter.Bool(true),
 	}
 
@@ -74,11 +75,11 @@ func GetUserClient(credentials *Credentials) (*twitter.Client, error){
 }
 
 type TweetInput struct {
-	Text string
-	AccessToken string
+	Text              string
+	AccessToken       string
 	AccessTokenSecret string
-	ConsumerKey string
-	ConsumerSecret string
+	ConsumerKey       string
+	ConsumerSecret    string
 }
 
 type TweetOutput struct {

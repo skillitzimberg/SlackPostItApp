@@ -1,4 +1,4 @@
-module db_common
+module logger_pkg
 
 go 1.12
 
