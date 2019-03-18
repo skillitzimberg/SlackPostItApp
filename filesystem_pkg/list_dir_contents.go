@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-type ListDirectory struct {}
+type ListDirectory struct{}
 
 func (ListDirectory) Name() string {
 	return "list_directory_contents"
@@ -15,12 +15,13 @@ func (ListDirectory) Version() string {
 	return "1.0"
 }
 
-func (f ListDirectory) Execute() {
+func (f ListDirectory) Execute(ctx step.Context) (interface{}, error) {
 	input := ListDirectoryInput{}
-	step.BindInputs(&input)
-	out, err := f.execute(input)
-	step.ReportError(err)
-	step.SetOutput(out)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	return f.execute(input)
 }
 
 func (ListDirectory) execute(input ListDirectoryInput) (*ListDirectoryOutput, error) {
@@ -45,9 +46,7 @@ func (ListDirectory) execute(input ListDirectoryInput) (*ListDirectoryOutput, er
 }
 
 type ListDirectoryInput struct {
-	DirectoryPath              string
-	UseHeaderAsFieldNames bool
-	FieldDelimiter        string
+	DirectoryPath string
 }
 
 type ListDirectoryOutput struct {

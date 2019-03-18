@@ -1,8 +1,8 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-github.com/apptreesoftware/go-workflow v0.0.0-20190313181937-9e26657bf6ee h1:IcOhbVs1oueOS+9i0GS21dADKuzbGU6ibcMx1Yy+uRg=
-github.com/apptreesoftware/go-workflow v0.0.0-20190313181937-9e26657bf6ee/go.mod h1:Tg1CzX0Y53L8O/y1cAvnSmS6Xf1oTVRehB70X4o1/+E=
-github.com/apptreesoftware/go-workflow v0.0.0-20190313215837-b2bdb87898e5 h1:+XbrbzhsxHJ4jK6ZFntFL/qHdh0pLMPHZfcIWU0HF+c=
-github.com/apptreesoftware/go-workflow v0.0.0-20190313215837-b2bdb87898e5/go.mod h1:Tg1CzX0Y53L8O/y1cAvnSmS6Xf1oTVRehB70X4o1/+E=
+github.com/apptreesoftware/go-workflow v0.0.0-20190318130153-cd89730a1b63 h1:W/9Img7wYqhui0w9CbRRfVo7N4EE2l++qwN/uUcaS/k=
+github.com/apptreesoftware/go-workflow v0.0.0-20190318130153-cd89730a1b63/go.mod h1:YvMhZ1zgHINU4oHpRLD2/FJ5YbvxUxCdzdYBcZjzUYg=
+github.com/apptreesoftware/go-workflow v0.0.0-20190318130316-3b3880415d61 h1:SHjLIC1Omk0pOg9AMY/9TQeKDG74GOs+O9EUsFqLurM=
+github.com/apptreesoftware/go-workflow v0.0.0-20190318130316-3b3880415d61/go.mod h1:YvMhZ1zgHINU4oHpRLD2/FJ5YbvxUxCdzdYBcZjzUYg=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -52,4 +52,8 @@ google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8 h1:Nw54tB0rB7hY/N0
 google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8/go.mod h1:JiN7NxoALGmiZfu7CAH4rXhgtRTLTxftemlI0sWmxmc=
 google.golang.org/grpc v1.18.0 h1:IZl7mfBGfbhYx2p2rKRtYgDFw6SBz+kclmxYrCksPPA=
 google.golang.org/grpc v1.18.0/go.mod h1:6QZJwpn2B+Zp71q/5VxRsJ6NXXVCE5NRUHRo+f3cWCs=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
+gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 honnef.co/go/tools v0.0.0-20180728063816-88497007e858/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=

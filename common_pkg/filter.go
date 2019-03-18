@@ -17,30 +17,38 @@ func (Filter) Version() string {
 	return "1.0"
 }
 
-func (Filter) Execute() {
-
+func (Filter) Execute(ctx step.Context) (interface{}, error) {
 	input := FilterInput{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
 
 	script := fmt.Sprintf("out = records.filter(function(record) { return %s });", input.Filter)
 	vm := otto.New()
 
-	err := vm.Set("records", input.Records)
-	step.ReportError(err)
+	err = vm.Set("records", input.Records)
+	if err != nil {
+		return nil, err
+	}
 	_, err = vm.Run(script)
-	step.ReportError(err)
-
+	if err != nil {
+		return nil, err
+	}
 	outArr, err := vm.Get("out")
-	step.ReportError(err)
-
+	if err != nil {
+		return nil, err
+	}
 	output := FilterOutput{}
 	exportedRecords, err := outArr.Export()
-	step.ReportError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	if outputRecords, ok := exportedRecords.([]map[string]interface{}); ok {
 		output.Records = outputRecords
 	}
-	step.SetOutput(output)
+	return output, nil
 }
 
 type FilterInput struct {

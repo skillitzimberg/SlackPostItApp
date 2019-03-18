@@ -18,12 +18,14 @@ func (Query) Version() string {
 	return "1.0"
 }
 
-func (Query) Execute() {
+func (Query) Execute(ctx step.Context) (interface{}, error) {
 	input := db_common.DatabaseCommand{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
 	db, err := sql.Open("goracle", input.ConnectionString)
-	step.ReportError(err)
-	db_common.PerformQuery(db, input)
+	if err != nil {
+		return nil, err
+	}
+	return db_common.PerformQuery(db, input)
 }
 
 type InsertBatch struct {
@@ -37,13 +39,18 @@ func (InsertBatch) Version() string {
 	return "1.0"
 }
 
-func (InsertBatch) Execute() {
+func (InsertBatch) Execute(ctx step.Context) (interface{}, error) {
 	input := &db_common.InsertCommand{}
-	step.BindInputs(input)
+	err := ctx.BindInputs(input)
+	if err != nil {
+		return nil, err
+	}
 	db, err := sql.Open("goracle", input.ConnectionString)
-	step.ReportError(err)
+	if err != nil {
+		return nil, err
+	}
 	err = db_common.PerformInsertAll(db, input)
-	step.ReportError(err)
+	return nil, err
 }
 
 type QueryAndQueue struct {
@@ -57,10 +64,15 @@ func (QueryAndQueue) Version() string {
 	return "1.0"
 }
 
-func (QueryAndQueue) Execute() {
+func (QueryAndQueue) Execute(ctx step.Context) (interface{}, error) {
 	input := db_common.DatabaseCommandToQueue{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
 	db, err := sql.Open("goracle", input.ConnectionString)
-	step.ReportError(err)
-	db_common.PerformQueryAndQueue(db, input)
+	if err != nil {
+		return nil, err
+	}
+	return db_common.PerformQueryAndQueue(db, input)
 }

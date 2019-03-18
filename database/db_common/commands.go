@@ -5,40 +5,55 @@ import (
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 )
 
-func PerformQuery(db *sql.DB, command DatabaseCommand) {
+func PerformQuery(db *sql.DB, command DatabaseCommand) (interface{}, error) {
 	rows, err := db.Query(command.Sql)
-	step.ReportError(err)
+	if err != nil {
+		return nil, err
+	}
 	cols, err := rows.Columns()
-	step.ReportError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	defer rows.Close()
 	results := []map[string]interface{}{}
 	for rows.Next() {
 		rowMap, err := ScanIntoMap(rows, cols)
-		step.ReportError(err)
+		if err != nil {
+			return nil, err
+		}
 		results = append(results, rowMap)
 	}
 	output := &RowOutput{
 		Results: results,
 	}
-	step.SetOutput(output)
+	return output, nil
 }
 
-func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue) {
+func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue) (interface{}, error) {
 	rows, err := db.Query(command.Sql)
-	step.ReportError(err)
+	if err != nil {
+		return nil, err
+	}
 	cols, err := rows.Columns()
-	step.ReportError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	engine := step.GetEngine()
 
 	defer rows.Close()
 	for rows.Next() {
 		rowMap, err := ScanIntoMap(rows, cols)
-		step.ReportError(err)
+		if err != nil {
+			return nil, err
+		}
 		err = engine.AddToQueue(command.Workflow, rowMap)
-		step.ReportError(err)
+		if err != nil {
+			return nil, err
+		}
 	}
+	return nil, nil
 }
 
 func PerformInsertAll(db *sql.DB, command *InsertCommand) error {

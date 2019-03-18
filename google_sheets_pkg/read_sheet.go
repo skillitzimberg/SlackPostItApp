@@ -18,12 +18,13 @@ func (ReadSheet) Version() string {
 	return "1.0"
 }
 
-func (s ReadSheet) Execute() {
+func (s ReadSheet) Execute(ctx step.Context) (interface{}, error) {
 	input := ReadSheetInput{}
-	step.BindInputs(&input)
-	out, err := s.execute(input)
-	step.ReportError(err)
-	step.SetOutput(out)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	return s.execute(input)
 }
 
 func (ReadSheet) execute(input ReadSheetInput) (*ReadSheetOutput, error) {

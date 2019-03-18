@@ -18,11 +18,14 @@ func (WriteToSheet) Version() string {
 	return "1.0"
 }
 
-func (w WriteToSheet) Execute() {
+func (w WriteToSheet) Execute(ctx step.Context) (interface{}, error) {
 	input := WriteToSheetInput{}
-	step.BindInputs(&input)
-	err := w.execute(input)
-	step.ReportError(err)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	err = w.execute(input)
+	return nil, err
 }
 
 func (WriteToSheet) execute(input WriteToSheetInput) error {

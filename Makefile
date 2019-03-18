@@ -4,7 +4,7 @@ test: |
 	echo ${HOST}
 all: publish
 build: build-dotnet build-go |
-build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger
+build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger build-webhook
 build-dotnet: build-famis
 build-postgres: |
 			cd database/postgres_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
@@ -34,6 +34,10 @@ build-filesystem: |
 	cd filesystem_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-filesystem: build-filesystem |
 	apptree workflow package publish -d filesystem_pkg --host ${HOST}
+build-webhook: |
+	cd webhook_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
+publish-webhook: build-webhook |
+	apptree workflow package publish -d webhook_pkg --host ${HOST}
 build-oracle: |
 	cd database/oracle_pkg && env CC=x86_64-w64-mingw32-gcc && gox -osarch="windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-oracle: build-oracle |
@@ -47,6 +51,7 @@ updatesdk: |
 	cd convert_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd common_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd logger_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
+	cd webhook_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish publish-logger
 
 publish-dotnet: publish-famis

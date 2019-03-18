@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using StepCore;
 
 namespace Accruent.Famis.Steps.Create {
-    public abstract class UpsertUserBase : StepAsync {
+    public abstract class UpsertUserBase : ServiceStep {
         [Input(Description = "User to create or update")]
         public User User { get; set; }
         
@@ -21,14 +21,7 @@ namespace Accruent.Famis.Steps.Create {
 
     [StepDescription("create_user")]
     public class CreateUser : UpsertUserBase {
-        [Input(Description = "FAMIS service url")]
-        public string Url { get; set; }
-        [Input(Description = "FAMIS service username")]
-        public string Username { get; set; }
-        [Input(Description = "FAMIS service password")]
-        public string Password { get; set; }
-        
-
+       
         public override async Task ExecuteAsync() {
             var service = new Service(Url, Username, Password);
             var result = await service.PostUser(User);

@@ -16,17 +16,19 @@ func (ParseJsonObject) Version() string {
 	return "1.0"
 }
 
-func (ParseJsonObject) Execute() {
+func (ParseJsonObject) Execute(ctx step.Context) (interface{}, error) {
 	input := parseJsonInput{}
-	step.BindInputs(&input)
+	err := ctx.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
 
 	rec := map[string]interface{}{}
-	err := jsoniter.UnmarshalFromString(input.String, &rec)
+	err = jsoniter.UnmarshalFromString(input.String, &rec)
 	if err != nil {
-		step.ReportError(err)
-		return
+		return nil, err
 	}
-	step.SetOutput(&parseJsonOutput{Record: rec})
+	return parseJsonOutput{Record: rec}, nil
 }
 
 type parseJsonInput struct {
