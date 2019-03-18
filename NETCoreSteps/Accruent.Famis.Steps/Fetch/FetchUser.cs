@@ -16,14 +16,9 @@ namespace Accruent.Famis.Steps.Fetch {
 
         public override async Task ExecuteAsync() {
             var service = new Service(Url, Username, Password);
-            Console.WriteLine();
-            try {
-                var response = await service.GetUsers("ExternalId eq '1'", limit: 1);
-                if (response.ResultCount == 1) {
-                    User = response.Current;
-                }
-            } catch (Exception e) {
-                Console.WriteLine($"Exception while fetching user ${e}");
+            var response = await service.GetUsers("ExternalId eq '1'", limit: 1);
+            if (response.ResultCount == 1) {
+                User = response.Current;
             }
         }
     }
