@@ -3,7 +3,6 @@ package main
 import "github.com/apptreesoftware/go-workflow/pkg/step"
 
 type SetFields struct {
-
 }
 
 type SetFieldsInput struct {
@@ -31,6 +30,11 @@ func (SetFields) Execute(ctx step.Context) (interface{}, error) {
 	}
 
 	record := input.Record
+	// if no record was given we are going
+	// to just write the values to an empty map
+	if record == nil {
+		record = make(map[string]interface{})
+	}
 	for k, v := range input.Fields {
 		record[k] = v
 	}
