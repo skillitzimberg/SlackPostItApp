@@ -18,3 +18,25 @@ steps:
     outputs:
       Record:
         description: The json object
+  map_records@1.0:
+    inputs:
+      From:
+        required: true
+        description: The json record to map to a new record
+      MapValues:
+        required: true
+        description: A json object of the field mappings
+    outputs:
+      To:
+        description: The json record to return
+  set_fields@1.0:
+      inputs:
+        Record:
+          required: true
+          description: the json object to add the given fields to
+        Fields:
+          required: true
+          description: the fields to add to the record
+      outputs:
+        Record:
+          description: the record with the fields added
