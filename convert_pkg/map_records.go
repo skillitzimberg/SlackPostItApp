@@ -3,7 +3,6 @@ package main
 import "github.com/apptreesoftware/go-workflow/pkg/step"
 
 type MapRecords struct {
-
 }
 
 func (MapRecords) Name() string {
@@ -20,22 +19,30 @@ func (MapRecords) Execute(ctx step.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	result := make(map[string]interface{}, 0)
 	from := inputs.From
-	for key, val := range inputs.MapValues {
-		value := from[key]
-		result[val] = value
+	// if no source record returns empty dest record
+	if from == nil {
+		return result, nil
 	}
-	return MapRecordsOutputs{To:result}, nil
+
+	// if no value maps were passed return original value
+	if inputs.MapValues == nil {
+		return inputs.From, nil
+	}
+
+	for sourceKey, destKey := range inputs.MapValues {
+		value := from[sourceKey]
+		result[destKey] = value
+	}
+	return MapRecordsOutputs{To: result}, nil
 }
 
 type MapRecordsInputs struct {
-	From map[string]interface{}
+	From      map[string]interface{}
 	MapValues map[string]string
 }
 
 type MapRecordsOutputs struct {
 	To map[string]interface{}
 }
-
