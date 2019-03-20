@@ -65,24 +65,9 @@ func (diff ObjectDiff) execute(jsonObj *ObjectDiffInput) (interface{}, error) {
 	}
 }
 
-// I know this is causing me to make two passes over that map keys
-// I am ok with that because of the simplicity on `diffing` the fields
-func (diff ObjectDiff) getStringKeysFromMap(data map[string]interface{}) []string {
-	if data == nil {
-		return make([]string, 0)
-	}
-	keys := reflect.ValueOf(data).MapKeys()
-	if len(keys) < 1 {
-		return make([]string, 0)
-	}
-	result := make([]string, len(keys))
-	// iterate keys and put strings into result
-	for idx, key := range keys {
-		result[idx] = key.String()
-	}
-	return result
-}
-
+// This method takes a slice of fields names you would like to compare and two json objects to compare on
+// It will then iterator each fields and check to see if they differ in the given objects
+// If it finds differences it will record the field that was different and indicate the the objects differed
 func (diff ObjectDiff) diffFields(fields []string, left map[string]interface{}, right map[string]interface{}) ObjectDiffOutput {
 	// are the two objs different
 	isDifferent := false
@@ -112,4 +97,22 @@ func (diff ObjectDiff) fieldsDiffer(field string, left map[string]interface{}, r
 	}
 
 	return leftData != rightData
+}
+
+// I know this is causing me to make two passes over the map keys
+// I am ok with that because of the simplicity on `diffing` the fields
+func (diff ObjectDiff) getStringKeysFromMap(data map[string]interface{}) []string {
+	if data == nil {
+		return make([]string, 0)
+	}
+	keys := reflect.ValueOf(data).MapKeys()
+	if len(keys) < 1 {
+		return make([]string, 0)
+	}
+	result := make([]string, len(keys))
+	// iterate keys and put strings into result
+	for idx, key := range keys {
+		result[idx] = key.String()
+	}
+	return result
 }
