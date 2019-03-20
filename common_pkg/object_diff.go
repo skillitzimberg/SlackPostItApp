@@ -55,7 +55,7 @@ func (diff ObjectDiff) ExecuteJson(jsonString string) (interface{}, error) {
 func (diff ObjectDiff) execute(jsonObj *ObjectDiffInput) (interface{}, error) {
 	left := jsonObj.Left
 	right := jsonObj.Right
-	// did we get an fields to compare?
+	// did the user specify fields to compare?
 	if fields := jsonObj.FieldsToCompare; fields != nil && len(fields) > 0 {
 		return diff.diffFields(fields, left, right), nil
 	} else {
@@ -106,18 +106,10 @@ func (diff ObjectDiff) fieldsDiffer(field string, left map[string]interface{}, r
 
 	// are these types comparable?
 	// if not deepEqual
-	// in most cases the not comparable data types are slices and maps
+	// in most cases the non comparable data types are slices and maps
 	if !reflect.TypeOf(leftData).Comparable() || !reflect.TypeOf(rightData).Comparable() {
 		return !reflect.DeepEqual(leftData, rightData)
 	}
 
 	return leftData != rightData
-}
-
-func (diff ObjectDiff) dataIsMap(val interface{}) bool {
-	return reflect.TypeOf(val).Kind() == reflect.Map
-}
-
-func (diff ObjectDiff) dataIsSlice(val interface{}) bool {
-	return reflect.TypeOf(val).Kind() == reflect.Slice
 }
