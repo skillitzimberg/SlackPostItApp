@@ -1,29 +1,30 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 	"reflect"
 )
 
-type JsonDiff struct {
+type ObjectDiff struct {
 }
 
-type JsonDiffInput struct {
+type ObjectDiffInput struct {
 	Left            map[string]interface{}
 	Right           map[string]interface{}
 	FieldsToCompare []string
 }
 
-type JsonDiffOutput struct {
+type ObjectDiffOutput struct {
 	Different          bool
 	FieldsThatDiffered []string
 }
 
-func (JsonDiff) Name() string {
+func (ObjectDiff) Name() string {
 	return "json_diff"
 }
 
-func (JsonDiff) Version() string {
+func (ObjectDiff) Version() string {
 	return "1.0"
 }
 
@@ -33,17 +34,29 @@ func (JsonDiff) Version() string {
 // if `FieldsToCompare` is not provided this step will compare every single
 // field in the left object and compare it to the right
 //
-func (diff JsonDiff) Execute(in step.Context) (interface{}, error) {
-	jsonDiffIn := &JsonDiffInput{}
-	err := in.BindInputs(jsonDiffIn)
+func (diff ObjectDiff) Execute(in step.Context) (interface{}, error) {
+	objectDiffIn := &ObjectDiffInput{}
+	err := in.BindInputs(objectDiffIn)
 	if err != nil {
 		return nil, err
 	}
+	return diff.execute(objectDiffIn)
+}
 
-	left := jsonDiffIn.Left
-	right := jsonDiffIn.Right
+func (diff ObjectDiff) ExecuteJson(jsonString string) (interface{}, error) {
+	objectDiffIn := &ObjectDiffInput{}
+	err := json.Unmarshal([]byte(jsonString), objectDiffIn)
+	if err != nil {
+		return nil, err
+	}
+	return diff.execute(objectDiffIn)
+}
+
+func (diff ObjectDiff) execute(jsonObj *ObjectDiffInput) (interface{}, error) {
+	left := jsonObj.Left
+	right := jsonObj.Right
 	// did we get an fields to compare?
-	if fields := jsonDiffIn.FieldsToCompare; fields != nil && len(fields) > 0 {
+	if fields := jsonObj.FieldsToCompare; fields != nil && len(fields) > 0 {
 		return diff.diffFields(fields, left, right), nil
 	} else {
 		// we will always get the fields to check from the Left map
@@ -54,7 +67,7 @@ func (diff JsonDiff) Execute(in step.Context) (interface{}, error) {
 
 // I know this is causing me to make two passes over that map keys
 // I am ok with that because of the simplicity on `diffing` the fields
-func (diff JsonDiff) getStringKeysFromMap(data map[string]interface{}) []string {
+func (diff ObjectDiff) getStringKeysFromMap(data map[string]interface{}) []string {
 	if data == nil {
 		return make([]string, 0)
 	}
@@ -70,7 +83,7 @@ func (diff JsonDiff) getStringKeysFromMap(data map[string]interface{}) []string 
 	return result
 }
 
-func (diff JsonDiff) diffFields(fields []string, left map[string]interface{}, right map[string]interface{}) JsonDiffOutput {
+func (diff ObjectDiff) diffFields(fields []string, left map[string]interface{}, right map[string]interface{}) ObjectDiffOutput {
 	// are the two objs different
 	isDifferent := false
 	// a collection of the fields that are different
@@ -83,12 +96,12 @@ func (diff JsonDiff) diffFields(fields []string, left map[string]interface{}, ri
 			differentFields = append(differentFields, field)
 		}
 	}
-	return JsonDiffOutput{Different: isDifferent, FieldsThatDiffered: differentFields}
+	return ObjectDiffOutput{Different: isDifferent, FieldsThatDiffered: differentFields}
 
 }
 
-func (diff JsonDiff) fieldsDiffer(field string, left map[string]interface{}, right map[string]interface{}) bool {
+func (diff ObjectDiff) fieldsDiffer(field string, left map[string]interface{}, right map[string]interface{}) bool {
 	leftData := left[field]
 	rightData := right[field]
-	return leftData == rightData
+	return leftData != rightData
 }
