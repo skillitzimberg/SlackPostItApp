@@ -103,5 +103,37 @@ func (diff ObjectDiff) diffFields(fields []string, left map[string]interface{}, 
 func (diff ObjectDiff) fieldsDiffer(field string, left map[string]interface{}, right map[string]interface{}) bool {
 	leftData := left[field]
 	rightData := right[field]
+
+	// maps and slices aren't comparable in golang
+	// so we need to make special cases for them
+	if diff.dataIsMap(left) || diff.dataIsMap(right) {
+		// since we only confirmed one is a type of map
+		if reflect.TypeOf(left) != reflect.TypeOf(right) {
+			// if types don't match they differ
+			return false
+		}
+
+		//// report if our objects are different
+		//leftFields := diff.getStringKeysFromMap(left)
+		//return diff.diffFields(leftFields, left, right).Different
+		return reflect.DeepEqual(left, right)
+	}
+
+	if diff.dataIsSlice(left) || diff.dataIsSlice(right) {
+		if reflect.TypeOf(left) != reflect.TypeOf(right) {
+			// if types don't match they differ
+			return false
+		}
+		return reflect.DeepEqual(left, right)
+	}
+
 	return leftData != rightData
+}
+
+func (diff ObjectDiff) dataIsMap(val interface{}) bool {
+	return reflect.TypeOf(val).Kind() == reflect.Map
+}
+
+func (diff ObjectDiff) dataIsSlice(val interface{}) bool {
+	return reflect.TypeOf(val).Kind() == reflect.Slice
 }
