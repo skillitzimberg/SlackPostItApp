@@ -75,7 +75,7 @@ func (diff ObjectDiff) getStringKeysFromMap(data map[string]interface{}) []strin
 	if len(keys) < 1 {
 		return make([]string, 0)
 	}
-	result := make([]string, 0, len(keys))
+	result := make([]string, len(keys))
 	// iterate keys and put strings into result
 	for idx, key := range keys {
 		result[idx] = key.String()
@@ -104,27 +104,11 @@ func (diff ObjectDiff) fieldsDiffer(field string, left map[string]interface{}, r
 	leftData := left[field]
 	rightData := right[field]
 
-	// maps and slices aren't comparable in golang
-	// so we need to make special cases for them
-	if diff.dataIsMap(left) || diff.dataIsMap(right) {
-		// since we only confirmed one is a type of map
-		if reflect.TypeOf(left) != reflect.TypeOf(right) {
-			// if types don't match they differ
-			return false
-		}
-
-		//// report if our objects are different
-		//leftFields := diff.getStringKeysFromMap(left)
-		//return diff.diffFields(leftFields, left, right).Different
-		return reflect.DeepEqual(left, right)
-	}
-
-	if diff.dataIsSlice(left) || diff.dataIsSlice(right) {
-		if reflect.TypeOf(left) != reflect.TypeOf(right) {
-			// if types don't match they differ
-			return false
-		}
-		return reflect.DeepEqual(left, right)
+	// are these types comparable?
+	// if not deepEqual
+	// in most cases the not comparable data types are slices and maps
+	if !reflect.TypeOf(leftData).Comparable() || !reflect.TypeOf(rightData).Comparable() {
+		return !reflect.DeepEqual(leftData, rightData)
 	}
 
 	return leftData != rightData
