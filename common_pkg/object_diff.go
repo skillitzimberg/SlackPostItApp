@@ -66,8 +66,8 @@ func (diff ObjectDiff) execute(jsonObj *ObjectDiffInput) (interface{}, error) {
 }
 
 // This method takes a slice of fields names you would like to compare and two json objects to compare on
-// It will then iterator each fields and check to see if they differ in the given objects
-// If it finds differences it will record the field that was different and indicate the the objects differed
+// It will then iterator each field and check to see if they differ in the given objects
+// If it finds differences it will record the field that was different and indicate that the objects differed
 func (diff ObjectDiff) diffFields(fields []string, left map[string]interface{}, right map[string]interface{}) ObjectDiffOutput {
 	// are the two objs different
 	isDifferent := false
