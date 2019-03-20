@@ -30,7 +30,7 @@ func PerformQuery(db *sql.DB, command DatabaseCommand) (interface{}, error) {
 	return output, nil
 }
 
-func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue) (interface{}, error) {
+func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue, engine step.Engine) (interface{}, error) {
 	rows, err := db.Query(command.Sql)
 	if err != nil {
 		return nil, err
@@ -39,8 +39,6 @@ func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue) (interface
 	if err != nil {
 		return nil, err
 	}
-
-	engine := step.GetEngine()
 
 	defer rows.Close()
 	for rows.Next() {

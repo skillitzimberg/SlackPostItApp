@@ -22,11 +22,11 @@ func (f ReadLinesAndQueue) Execute(ctx step.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = f.execute(input)
+	err = f.execute(input, ctx)
 	return nil, err
 }
 
-func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) error {
+func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput, ctx step.Context) error {
 	file, err := os.Open(input.FilePath)
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) error {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	engine := step.GetEngine()
+	engine := ctx.Engine()
 
 	for scanner.Scan() {
 		lineRecord := scanner.Text()
@@ -48,6 +48,6 @@ func (ReadLinesAndQueue) execute(input ReadLinesAndQueueInput) error {
 }
 
 type ReadLinesAndQueueInput struct {
-	FilePath              string
-	Workflow              string
+	FilePath string
+	Workflow string
 }

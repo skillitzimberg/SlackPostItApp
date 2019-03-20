@@ -52,7 +52,7 @@ func (QueryAndQueue) Execute(ctx step.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return db_common.PerformQueryAndQueue(db, input)
+	return db_common.PerformQueryAndQueue(db, input, ctx.Engine())
 }
 
 type InsertBatch struct {
