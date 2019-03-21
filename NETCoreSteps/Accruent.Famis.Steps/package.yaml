@@ -173,60 +173,6 @@ steps:
         Record:
           description: the returned record from the upsert
       sample: ''
-    create_user@1.0:
-      description: ''
-      inputs:
-        User:
-          required: true
-          description: User to create or update
-          sample: ''
-        Url:
-          required: true
-          description: FAMIS service url
-          sample: ''
-        Username:
-          required: true
-          description: FAMIS service username
-          sample: ''
-        Password:
-          required: true
-          description: FAMIS service password
-          sample: ''
-      outputs:
-        Success:
-          description: True if the user was created successfully
-        User:
-          description: The newly created user. Will contain the ID of the user.
-        Message:
-          description: Contains the response message from the FAMIS services
-      sample: ''
-    create_user_mock@1.0:
-      description: ''
-      inputs:
-        User:
-          required: true
-          description: User to create or update
-          sample: ''
-        Url:
-          required: true
-          description: FAMIS service url
-          sample: ''
-        Username:
-          required: true
-          description: FAMIS service username
-          sample: ''
-        Password:
-          required: true
-          description: FAMIS service password
-          sample: ''
-      outputs:
-        Success:
-          description: True if the user was created successfully
-        User:
-          description: The newly created user. Will contain the ID of the user.
-        Message:
-          description: Contains the response message from the FAMIS services
-      sample: ''
     convert_concur_charge@1.0:
       description: ''
       inputs:
@@ -281,4 +227,5 @@ steps:
         FamisUser:
           description: The converted famis user
       sample: ''
+
 
