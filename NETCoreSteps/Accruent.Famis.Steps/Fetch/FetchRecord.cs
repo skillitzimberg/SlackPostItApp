@@ -10,8 +10,8 @@ namespace Accruent.Famis.Steps.Fetch {
         [Input(Description = "the endpoint to use for this record")]
         public string Endpoint { get; set; }
 
-        [Input(Description = "the ID of the record to fetch")]
-        public string RecordId { get; set; }
+        [Input(Description = "the filter used to fetch record")]
+        public string Filter { get; set; }
 
         [Input(Description = "optional expand value")]
         public string Expand { get; set; }
@@ -21,7 +21,7 @@ namespace Accruent.Famis.Steps.Fetch {
 
         public override async Task ExecuteAsync() {
             var service = new Service(Url, Username, Password);
-            var record = await service.GetRecord(Endpoint, RecordId, Expand);
+            var record = await service.GetRecord(Endpoint, Filter, Expand);
             Record = record;
         }
     }

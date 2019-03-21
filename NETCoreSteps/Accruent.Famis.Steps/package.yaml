@@ -35,6 +35,12 @@ steps:
       Password:
         required: true
         description: FAMIS service password
+      Filter:
+        required: true
+        description: The filter to use when fetching record
+      Expand:
+        required: false
+        description: User to create or update
         sample: ''
     outputs:
       Success:
@@ -51,17 +57,17 @@ steps:
           required: true
           description: the endpoint to use for this record
           sample: ''
-        RecordId:
-          required: true
-          description: the ID of the record to fetch
-          sample: ''
         Expand:
-          required: true
+          required: false
           description: optional expand value
           sample: ''
         Url:
           required: true
           description: FAMIS service url
+          sample: ''
+        Filter:
+          required: true
+          description: filter to use when fetching record
           sample: ''
         Username:
           required: true
@@ -83,19 +89,19 @@ steps:
           description: the endpoint to use for this record
           sample: ''
         Filter:
-          required: true
+          required: false
           description: optional filter to use when fetching records
           sample: ''
         Expand:
-          required: true
+          required: false
           description: optional expand value
           sample: ''
         Offset:
-          required: true
+          required: false
           description: optional page offset, default is 0
           sample: ''
         Limit:
-          required: true
+          required: false
           description: optional maximum number of records to return
           sample: ''
         Url:
