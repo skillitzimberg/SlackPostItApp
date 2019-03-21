@@ -1,6 +1,8 @@
 package main
 
-import "github.com/apptreesoftware/go-workflow/pkg/step"
+import (
+	"github.com/apptreesoftware/go-workflow/pkg/step"
+)
 
 type MapRecords struct {
 }
@@ -30,17 +32,18 @@ func (MapRecords) Execute(ctx step.Context) (interface{}, error) {
 	if inputs.MapValues == nil {
 		return inputs.From, nil
 	}
-
-	for sourceKey, destKey := range inputs.MapValues {
-		value := from[sourceKey]
-		result[destKey] = value
+	for _, keyValPair := range inputs.MapValues {
+		for sourceKey, destKey := range keyValPair {
+			value := from[sourceKey]
+			result[destKey] = value
+		}
 	}
 	return MapRecordsOutputs{To: result}, nil
 }
 
 type MapRecordsInputs struct {
 	From      map[string]interface{}
-	MapValues map[string]string
+	MapValues []map[string]string
 }
 
 type MapRecordsOutputs struct {
