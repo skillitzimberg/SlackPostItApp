@@ -26,6 +26,9 @@ steps:
       Id:
         required: true
         description: The ID of the record you want to pull from the cache
+      CacheName:
+        required: true
+        description: The name of the cache you would like to store this record in
     outputs:
       Record:
         description: The record that was fetched from the cache. If the record was not found in the cache this will be null
