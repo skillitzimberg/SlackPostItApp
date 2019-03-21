@@ -35,7 +35,7 @@ namespace Famis {
 
             var jsonBody = JsonConvert.SerializeObject(_creds);
             var result = await _client.PostAsync(
-                BuildUri("api/Login"),
+                BuildUri("MobileWebServices/api/Login"),
                 new StringContent(jsonBody, Encoding.UTF8, "application/json"));
 
             var responseBody = await result.Content.ReadAsStringAsync();
