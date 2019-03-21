@@ -787,9 +787,8 @@ namespace Famis {
             return new UpsertResponse<OtherCost>(false, failResponse.Message, null);
         }
 
-        public delegate Task<UpsertResponse<JsonMap>> PersistFunction(
-            string url,
-            StringContent content);
+        // method for persisting records to FAMIS
+        public delegate Task<UpsertResponse<JsonMap>> PersistFunction(string url, StringContent content);
 
         public async Task<UpsertResponse<JsonMap>> CreateRecord(
             string endpoint,
@@ -807,6 +806,7 @@ namespace Famis {
             string idField) {
             // get the entity id from the entity
             var id = getIdFromObj(obj, idField);
+            
             var body = JsonConvert.SerializeObject(obj);
             await AuthorizeIfNeeded();
             // append id as the key for update
@@ -816,10 +816,11 @@ namespace Famis {
         }
 
 
+        // This method gets the value form the given idField attribute
+        // then removes it from the JsonMap because FAMIS will not allow it when creating 
+        // or updating
         private static int getIdFromObj(JsonMap obj, string idField) {
             var id = (Int64) obj[idField];
-            // remove the id field because FAMIS will not let you update
-            // if it is present in the object
             obj.Remove(idField);
             return Convert.ToInt32(id);
         }
