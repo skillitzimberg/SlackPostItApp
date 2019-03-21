@@ -32,7 +32,7 @@ steps:
   set_fields@1.0:
       inputs:
         Record:
-          required: true
+          required: false
           description: the json object to add the given fields to
         Fields:
           required: true
