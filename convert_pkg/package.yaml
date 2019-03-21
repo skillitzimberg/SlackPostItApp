@@ -49,4 +49,5 @@ steps:
           required: true
           description: the fields to extract to returned record
       outputs:
-        Record: the returned record with fields extracted
+        Record:
+          description: the record with the fields extracted
