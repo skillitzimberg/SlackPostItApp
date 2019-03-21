@@ -54,7 +54,7 @@ func PerformQueryAndQueue(db *sql.DB, command DatabaseCommandToQueue, engine ste
 	return nil, nil
 }
 
-func PerformInsertAll(db *sql.DB, command *InsertCommand) error {
+func PerformInsertAll(db *sql.DB, command *InsertBatchCommand) error {
 	if len(command.Records) == 0 {
 		return nil
 	}
@@ -64,7 +64,7 @@ func PerformInsertAll(db *sql.DB, command *InsertCommand) error {
 	}
 	for _, rec := range command.Records {
 		var rowValues []interface{}
-		for _, fieldName := range command.ValueFields {
+		for _, fieldName := range command.Fields {
 			value := rec[fieldName]
 			rowValues = append(rowValues, value)
 		}
@@ -78,4 +78,8 @@ func PerformInsertAll(db *sql.DB, command *InsertCommand) error {
 		return err
 	}
 	return nil
+}
+
+func ExecuteStatement(db *sql.DB, command *DatabaseCommand) (sql.Result, error) {
+	return db.Exec(command.Sql)
 }

@@ -53,3 +53,13 @@ steps:
     outputs:
       Results:
         description: "The records returned from the query."
+  execute@1.0:
+    description: "Accepts a list of records and inserts them into a database."
+    inputs:
+      ConnectionString:
+        required: true
+        sample: "oracle://user:passw@service_name OR user/passw@service_name OR advanced connection user/pass@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=hostname)(PORT=port)))(CONNECT_DATA=(SERVICE_NAME=sn)))"
+        description: "Postgres Connection string"
+      Sql:
+        required: true
+        description: ""
