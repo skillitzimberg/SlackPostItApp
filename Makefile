@@ -16,7 +16,7 @@ publish-googlesheets: build-googlesheets |
 	apptree workflow package publish -d google_sheets_pkg --host ${HOST}
 build-convert: |
 	cd convert_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
-publish-convert: build-convert
+publish-convert: build-convert |
 	apptree workflow package publish -d convert_pkg --host ${HOST}
 build-common: |
 	cd common_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"

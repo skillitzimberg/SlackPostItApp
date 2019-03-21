@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Famis.Model;
 using Newtonsoft.Json;
+using JsonMap = System.Collections.Generic.Dictionary<string, object>;
 
 namespace Famis {
     public class Service : IService {
@@ -786,6 +790,78 @@ namespace Famis {
                 JsonConvert.DeserializeObject<FamisHttpResponse>(
                     await response.Content.ReadAsStringAsync());
             return new UpsertResponse<OtherCost>(false, failResponse.Message, null);
+        }
+
+        // method for persisting records to FAMIS
+        public delegate Task<UpsertResponse<JsonMap>> PersistFunction(string url, StringContent content);
+
+        public async Task<UpsertResponse<JsonMap>> CreateRecord(
+            string endpoint,
+            JsonMap obj) {
+            var body = JsonConvert.SerializeObject(obj);
+            await AuthorizeIfNeeded();
+            var url = _baseUri + endpoint;
+            var content = new StringContent(body, Encoding.UTF8, "application/json");
+            return await UpsertRecord(url, content, createRecord());
+        }
+
+        public async Task<UpsertResponse<JsonMap>> UpdateRecord(
+            string endpoint,
+            JsonMap obj,
+            string idField) {
+            // get the entity id from the entity
+            var id = getIdFromObj(obj, idField);
+            
+            var body = JsonConvert.SerializeObject(obj);
+            await AuthorizeIfNeeded();
+            // append id as the key for update
+            var url = _baseUri + endpoint + $"?key={id}";
+            var content = new StringContent(body, Encoding.UTF8, "application/json");
+            return await UpsertRecord(url, content, updateRecord());
+        }
+
+
+        // This method gets the value form the given idField attribute
+        // then removes it from the JsonMap because FAMIS will not allow it when creating 
+        // or updating
+        private static int getIdFromObj(JsonMap obj, string idField) {
+            var id = (Int64) obj[idField];
+            obj.Remove(idField);
+            return Convert.ToInt32(id);
+        }
+
+
+        public Task<UpsertResponse<JsonMap>> UpsertRecord(
+            string url,
+            StringContent content,
+            PersistFunction func) {
+            return func(url, content);
+        }
+
+        private PersistFunction createRecord() {
+            return async (url, content) => {
+                var response = await _client.PostAsync(url, content);
+                return await handleResponse(response);
+            };
+        }
+
+        private PersistFunction updateRecord() {
+            return async (url, content) => {
+                var response = await _client.PatchAsync(url, content);
+                return await handleResponse(response);
+            };
+        }
+
+        private static async Task<UpsertResponse<JsonMap>> handleResponse(
+            HttpResponseMessage response) {
+            var responseBody = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode) {
+                var record = JsonConvert.DeserializeObject<JsonMap>(responseBody);
+                return new UpsertResponse<JsonMap>(true, null, record);
+            }
+
+            var failResponse = JsonConvert.DeserializeObject<FamisHttpResponse>(responseBody);
+            return new UpsertResponse<JsonMap>(false, failResponse.Message, null);
         }
     }
 }

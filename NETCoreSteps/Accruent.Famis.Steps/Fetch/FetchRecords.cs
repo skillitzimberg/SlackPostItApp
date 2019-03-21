@@ -4,7 +4,7 @@ using Famis;
 using StepCore;
 
 namespace Accruent.Famis.Steps.Fetch {
-    [StepDescription("fetch_records", Description = "Fetches a ;ist of records from famis")]
+    [StepDescription("fetch_records", Description = "Fetches a list of records from famis")]
     public class FetchRecords : ServiceStep {
         [Input(Description = "the endpoint to use for this record")]
         public string Endpoint { get; set; }

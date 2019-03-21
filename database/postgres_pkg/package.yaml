@@ -20,12 +20,22 @@ steps:
         required: true
         description: "The list of records you'd like to insert"
         sample: myvar
-      ValueFields:
+      Fields:
         required: true
         description: "The field names you'd like to pull from from the `Records` input."
         sample: |
           - firstName
           - lastName
+  execute@1.0:
+    description: "Accepts a list of records and inserts them into a database."
+    inputs:
+      ConnectionString:
+        required: true
+        sample: "postgres://user:passw@localhost:5432"
+        description: "Postgres Connection string"
+      Sql:
+        required: true
+        description: ""
   query@1.0:
     description: "Performs a SELECT query"
     inputs:
