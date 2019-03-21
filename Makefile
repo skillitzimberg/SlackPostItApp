@@ -57,7 +57,7 @@ updatesdk: |
 	cd logger_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd webhook_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd cache_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
-publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish publish-logger
+publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish-logger publish-cache
 
 publish-dotnet: publish-famis
 

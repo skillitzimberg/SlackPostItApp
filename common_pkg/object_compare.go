@@ -6,27 +6,26 @@ import (
 	"reflect"
 )
 
-
-type ObjectDiff struct {
+type ObjectCompare struct {
 }
 
-type ObjectDiffInput struct {
+type ObjectCompareInput struct {
 	Left            JsonMap
 	Right           JsonMap
 	FieldsToCompare []string
 	FieldsToExclude []string
 }
 
-type ObjectDiffOutput struct {
-	Different          bool
+type ObjectCompareOutput struct {
+	Equal              bool
 	FieldsThatDiffered []string
 }
 
-func (ObjectDiff) Name() string {
-	return "json_diff"
+func (ObjectCompare) Name() string {
+	return "object_compare"
 }
 
-func (ObjectDiff) Version() string {
+func (ObjectCompare) Version() string {
 	return "1.0"
 }
 
@@ -37,8 +36,8 @@ func (ObjectDiff) Version() string {
 // if `FieldsToCompare` is not provided this step will compare every single
 // field in the left object and compare it to the right
 //
-func (diff ObjectDiff) Execute(in step.Context) (interface{}, error) {
-	objectDiffIn := &ObjectDiffInput{}
+func (diff ObjectCompare) Execute(in step.Context) (interface{}, error) {
+	objectDiffIn := &ObjectCompareInput{}
 	err := in.BindInputs(objectDiffIn)
 	if err != nil {
 		return nil, err
@@ -46,8 +45,8 @@ func (diff ObjectDiff) Execute(in step.Context) (interface{}, error) {
 	return diff.execute(objectDiffIn)
 }
 
-func (diff ObjectDiff) ExecuteJson(jsonString string) (interface{}, error) {
-	objectDiffIn := &ObjectDiffInput{}
+func (diff ObjectCompare) ExecuteJson(jsonString string) (interface{}, error) {
+	objectDiffIn := &ObjectCompareInput{}
 	err := json.Unmarshal([]byte(jsonString), objectDiffIn)
 	if err != nil {
 		return nil, err
@@ -55,7 +54,7 @@ func (diff ObjectDiff) ExecuteJson(jsonString string) (interface{}, error) {
 	return diff.execute(objectDiffIn)
 }
 
-func (diff ObjectDiff) execute(jsonObj *ObjectDiffInput) (interface{}, error) {
+func (diff ObjectCompare) execute(jsonObj *ObjectCompareInput) (interface{}, error) {
 	left := jsonObj.Left
 	right := jsonObj.Right
 	exclude := diff.getLookupMap(jsonObj.FieldsToExclude)
@@ -63,18 +62,21 @@ func (diff ObjectDiff) execute(jsonObj *ObjectDiffInput) (interface{}, error) {
 	// did the user specify fields to compare?
 	if fields := jsonObj.FieldsToCompare; fields != nil && len(fields) > 0 {
 		return diff.diffFields(fields, left, right, exclude), nil
-	} else {
-		// we will always get the fields to check from the Left map
-		mapFields := diff.getStringKeysFromMap(left)
-		return diff.diffFields(mapFields, left, right, exclude), nil
 	}
+
+	// we will always get the fields to check from the Left map
+	mapFields := diff.getStringKeysFromMap(left)
+	if len(mapFields) == 0 {
+		mapFields = diff.getStringKeysFromMap(right)
+	}
+	return diff.diffFields(mapFields, left, right, exclude), nil
 }
 
 // This method takes a slice of fields names you would like to compare and two json objects to compare on
 // It will then iterator each field and check to see if they differ in the given objects
 // If it finds differences it will record the field that was different and indicate that the objects differed
 // if also accepts an options LookupMap that will exclude any fields contained in the map
-func (diff ObjectDiff) diffFields(fields []string, left JsonMap, right JsonMap, looks LookupMap) ObjectDiffOutput {
+func (diff ObjectCompare) diffFields(fields []string, left JsonMap, right JsonMap, looks LookupMap) ObjectCompareOutput {
 	// are the two objs different
 	isDifferent := false
 	// a collection of the fields that are different
@@ -91,14 +93,23 @@ func (diff ObjectDiff) diffFields(fields []string, left JsonMap, right JsonMap, 
 			differentFields = append(differentFields, field)
 		}
 	}
-	return ObjectDiffOutput{Different: isDifferent, FieldsThatDiffered: differentFields}
+	return ObjectCompareOutput{Equal: !isDifferent, FieldsThatDiffered: differentFields}
 
 }
 
-func (diff ObjectDiff) fieldsDiffer(field string, left JsonMap, right JsonMap) bool {
+func (diff ObjectCompare) fieldsDiffer(field string, left JsonMap, right JsonMap) bool {
 	leftData := left[field]
 	rightData := right[field]
 
+	if leftData == nil && rightData != nil {
+		return true
+	}
+	if rightData == nil && leftData != nil {
+		return true
+	}
+	if leftData == nil && rightData == nil {
+		return false
+	}
 	// are these types comparable?
 	// if not deepEqual
 	// in most cases the non comparable data types are slices and maps
@@ -109,7 +120,7 @@ func (diff ObjectDiff) fieldsDiffer(field string, left JsonMap, right JsonMap) b
 	return leftData != rightData
 }
 
-func (diff ObjectDiff) getLookupMap(fields []string) LookupMap {
+func (diff ObjectCompare) getLookupMap(fields []string) LookupMap {
 	result := make(map[string]bool, 0)
 	if fields == nil || len(fields) < 1 {
 		return result
@@ -123,7 +134,7 @@ func (diff ObjectDiff) getLookupMap(fields []string) LookupMap {
 
 // I know this is causing me to make two passes over the map keys
 // I am ok with that because of the simplicity on `diffing` the fields
-func (diff ObjectDiff) getStringKeysFromMap(data JsonMap) []string {
+func (diff ObjectCompare) getStringKeysFromMap(data JsonMap) []string {
 	if data == nil {
 		return make([]string, 0)
 	}
