@@ -40,3 +40,13 @@ steps:
       outputs:
         Record:
           description: the record with the fields added
+  extract_fields@1.0:
+      inputs:
+        Record:
+          required: true
+          description: the record you would like to extract fields from
+        Fields:
+          required: true
+          description: the fields to extract to returned record
+      outputs:
+        Record: the returned record with fields extracted
