@@ -115,29 +115,6 @@ steps:
         Records:
           description: the fetched records
       sample: ''
-    fetch_user@1.0:
-      description: Fetches a user from famis
-      inputs:
-        Filter:
-          required: true
-          description: The filter to use when fetching a user
-          sample: ''
-        Url:
-          required: true
-          description: FAMIS service url
-          sample: ''
-        Username:
-          required: true
-          description: FAMIS service username
-          sample: ''
-        Password:
-          required: true
-          description: FAMIS service password
-          sample: ''
-      outputs:
-        User:
-          description: The user that was fetched from FAMIS
-      sample: ''
     create@1.0:
       description: ''
       inputs:
@@ -227,5 +204,3 @@ steps:
         FamisUser:
           description: The converted famis user
       sample: ''
-
-
