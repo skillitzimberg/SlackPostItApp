@@ -13,7 +13,7 @@ namespace Accruent.Famis.Steps
         [Input(Description = "the endpoint of the entity you are trying to update")]
         public string Endpoint { get; set; }
 
-        [Input(Description = "the endpoint of the entity you are trying to update")]
+        [Input(Description = "the endpoint of the entity you are trying to update", Required = false)]
         public string IdField { get; set; }
         
         [Output(Description = "the success status of the upsert")]

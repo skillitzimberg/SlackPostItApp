@@ -22,7 +22,6 @@ steps:
         description: the endpoint of the entity you are trying to update
         sample: ''
       IdField:
-        required: true
         description: the endpoint of the entity you are trying to update
         sample: ''
       Url:
@@ -127,7 +126,6 @@ steps:
           description: the endpoint of the entity you are trying to update
           sample: ''
         IdField:
-          required: true
           description: the endpoint of the entity you are trying to update
           sample: ''
         Url:
@@ -204,3 +202,4 @@ steps:
         FamisUser:
           description: The converted famis user
       sample: ''
+
