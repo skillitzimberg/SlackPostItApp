@@ -20,7 +20,7 @@ steps:
         required: true
         description: "The list of records you'd like to insert"
         sample: myvar
-      ValueFields:
+      Fields:
         required: true
         description: "The field names you'd like to pull from from the `Records` input."
         sample: |
