@@ -4,7 +4,7 @@ test: |
 	echo ${HOST}
 all: publish
 build: build-dotnet build-go |
-build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger build-webhook
+build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger build-webhook build-cache
 build-dotnet: build-famis
 build-postgres: |
 			cd database/postgres_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
@@ -22,6 +22,10 @@ build-common: |
 	cd common_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-common: build-common |
 	apptree workflow package publish -d common_pkg --host ${HOST}
+build-cache: |
+	cd cache_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
+publish-cache: build-cache |
+	apptree workflow package publish -d cache_pkg --host ${HOST}
 build-logger: |
 	cd logger_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-logger: build-logger |
@@ -52,7 +56,8 @@ updatesdk: |
 	cd common_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd logger_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd webhook_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
-publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish publish-logger
+	cd cache_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
+publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish-logger publish-cache
 
 publish-dotnet: publish-famis
 

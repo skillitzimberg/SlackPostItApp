@@ -43,4 +43,25 @@ steps:
     outputs:
       Text:
         description: The new string
+  object_compare@1.0:
+    inputs:
+      Left:
+        required: true
+        description: A record to compare
+      Right:
+        required: true
+        description: A record to compare
+      FieldsToCompare:
+        required: false
+        description: If provided, only these fields in the two object will be compared for equality
+        sample: '["field1", "field2"]'
+      FieldsToExclude:
+        required: false
+        description: If provided, these fields will be ignored during the object comparison
+        sample: '["field1", "field2"]'
+    outputs:
+      Equal:
+        description: True if the objects are equal, False if they are not.
+      FieldsThatDiffered:
+        description: A list of fields that were different between the left & right object
 

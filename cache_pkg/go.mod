@@ -1,4 +1,4 @@
-module logger_pkg
+module cache_pkg
 
 go 1.12
 

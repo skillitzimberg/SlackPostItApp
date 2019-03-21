@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -11,10 +12,8 @@ using Famis.Model;
 using Newtonsoft.Json;
 using JsonMap = System.Collections.Generic.Dictionary<string, object>;
 
-namespace Famis
-{
-    public class Service : IService
-    {
+namespace Famis {
+    public class Service : IService {
         private readonly Credentials _creds;
         private readonly HttpClient _client;
         private AuthResponse _authResponse;
@@ -39,7 +38,8 @@ namespace Famis
             }
 
             var jsonBody = JsonConvert.SerializeObject(_creds);
-            var result = await _client.PostAsync(BuildUri("api/Login"),
+            var result = await _client.PostAsync(
+                BuildUri("MobileWebServices/api/Login"),
                 new StringContent(jsonBody, Encoding.UTF8, "application/json"));
 
             var responseBody = await result.Content.ReadAsStringAsync();
@@ -49,8 +49,24 @@ namespace Famis
             }
 
             _authResponse = authResponse;
-            _client.DefaultRequestHeaders.Add("Authorization",
+            _client.DefaultRequestHeaders.Add(
+                "Authorization",
                 $"{authResponse.Item.TokenType} {authResponse.Item.AccessToken}");
+        }
+
+        public async Task<object> GetRecord(string endpoint, string id, string expand) {
+            return await GetOne<object>(endpoint, id, expand);
+        }
+
+        public async Task<List<object>> GetRecords(
+            string endpoint,
+            string filter = null,
+            string expand = null,
+            int offset = 0,
+            int limit = -1) {
+            var response = await Get<object>(
+                endpoint, filter, expand, offset, limit);
+            return response.PageResults;
         }
 
         public async Task<PagedResponse<Company>> GetCompanies(
@@ -58,7 +74,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<Company>("apis/360facility/v1/companies", filter, expand, offset,
+            return await Get<Company>(
+                "apis/360facility/v1/companies", filter, expand, offset,
                 limit);
         }
 
@@ -71,7 +88,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<Property>("apis/360facility/v1/properties", filter, expand, offset,
+            return await Get<Property>(
+                "apis/360facility/v1/properties", filter, expand, offset,
                 limit);
         }
 
@@ -96,7 +114,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<Country>("apis/360facility/v1/countries", filter, expand, offset,
+            return await Get<Country>(
+                "apis/360facility/v1/countries", filter, expand, offset,
                 limit);
         }
 
@@ -121,7 +140,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<InvoiceHeader>("apis/360facility/v1/invoiceheaders", filter, expand,
+            return await Get<InvoiceHeader>(
+                "apis/360facility/v1/invoiceheaders", filter, expand,
                 offset, limit);
         }
 
@@ -134,7 +154,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<InvoiceLine>("apis/360facility/v1/invoicelines", filter, expand,
+            return await Get<InvoiceLine>(
+                "apis/360facility/v1/invoicelines", filter, expand,
                 offset, limit);
         }
 
@@ -147,7 +168,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<JournalEntry>("apis/360facility/v1/journalentrynpfa", filter, expand,
+            return await Get<JournalEntry>(
+                "apis/360facility/v1/journalentrynpfa", filter, expand,
                 offset, limit);
         }
 
@@ -160,7 +182,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<MaterialItem>("apis/360facility/v1/materialitems", filter, expand,
+            return await Get<MaterialItem>(
+                "apis/360facility/v1/materialitems", filter, expand,
                 offset, limit);
         }
 
@@ -173,7 +196,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<PoHeader>("apis/360facility/v1/purchaseorderheaders", filter, expand,
+            return await Get<PoHeader>(
+                "apis/360facility/v1/purchaseorderheaders", filter, expand,
                 offset, limit);
         }
 
@@ -186,7 +210,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<PoLine>("apis/360facility/v1/purchaseorderlines", filter, expand,
+            return await Get<PoLine>(
+                "apis/360facility/v1/purchaseorderlines", filter, expand,
                 offset, limit);
         }
 
@@ -199,7 +224,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<Receipt>("apis/360facility/v1/purchaseorderreceipts", filter, expand,
+            return await Get<Receipt>(
+                "apis/360facility/v1/purchaseorderreceipts", filter, expand,
                 offset,
                 limit);
         }
@@ -213,7 +239,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<PoStatus>("apis/360facility/v1/purchaseorderstatuses", filter, expand,
+            return await Get<PoStatus>(
+                "apis/360facility/v1/purchaseorderstatuses", filter, expand,
                 offset, limit);
         }
 
@@ -226,13 +253,15 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<PrHeader>("apis/360facility/v1/purchaserequisitionheaders", filter,
+            return await Get<PrHeader>(
+                "apis/360facility/v1/purchaserequisitionheaders", filter,
                 expand, offset,
                 limit);
         }
 
         public async Task<PrHeader> GetPrHeader(string id, string expand = null) {
-            return await GetOne<PrHeader>("apis/360facility/v1/purchaserequisitionheaders", id,
+            return await GetOne<PrHeader>(
+                "apis/360facility/v1/purchaserequisitionheaders", id,
                 expand);
         }
 
@@ -241,7 +270,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<PrLine>("apis/360facility/v1/purchaserequisitionlines", filter, expand,
+            return await Get<PrLine>(
+                "apis/360facility/v1/purchaserequisitionlines", filter, expand,
                 offset,
                 limit);
         }
@@ -279,7 +309,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<AccountSegmentValueNPFA>("apis/360facility/v1/accountsegmentvaluenpfa",
+            return await Get<AccountSegmentValueNPFA>(
+                "apis/360facility/v1/accountsegmentvaluenpfa",
                 filter, expand, offset, limit);
         }
 
@@ -293,7 +324,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<User>("apis/360facility/v1/users", filter, expand, offset,
+            return await Get<User>(
+                "apis/360facility/v1/users", filter, expand, offset,
                 limit);
         }
 
@@ -346,7 +378,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<WorkOrder>("apis/360facility/v1/workorders", filter, expand, offset,
+            return await Get<WorkOrder>(
+                "apis/360facility/v1/workorders", filter, expand, offset,
                 limit);
         }
 
@@ -359,7 +392,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<Warehouse>("apis/360facility/v1/warehouses", filter, expand, offset,
+            return await Get<Warehouse>(
+                "apis/360facility/v1/warehouses", filter, expand, offset,
                 limit);
         }
 
@@ -372,7 +406,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<Receipt>("apis/360facility/v1/purchaseorderreceipts", filter, expand,
+            return await Get<Receipt>(
+                "apis/360facility/v1/purchaseorderreceipts", filter, expand,
                 offset,
                 limit);
         }
@@ -386,7 +421,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<RequestType>("apis/360facility/v1/requesttypes", filter, expand,
+            return await Get<RequestType>(
+                "apis/360facility/v1/requesttypes", filter, expand,
                 offset,
                 limit);
         }
@@ -396,7 +432,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<OtherCostType>("apis/360facility/v1/othercosttypes", filter, expand,
+            return await Get<OtherCostType>(
+                "apis/360facility/v1/othercosttypes", filter, expand,
                 offset,
                 limit);
         }
@@ -406,7 +443,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<RequestPriority>("apis/360facility/v1/requestpriorities", filter,
+            return await Get<RequestPriority>(
+                "apis/360facility/v1/requestpriorities", filter,
                 expand, offset,
                 limit);
         }
@@ -416,7 +454,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<CrewUserAssociation>("apis/360facility/v1/crewuserassociations",
+            return await Get<CrewUserAssociation>(
+                "apis/360facility/v1/crewuserassociations",
                 filter, expand, offset,
                 limit);
         }
@@ -426,7 +465,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<LaborEntry>("apis/360facility/v1/laborentries", filter, expand, offset,
+            return await Get<LaborEntry>(
+                "apis/360facility/v1/laborentries", filter, expand, offset,
                 limit);
         }
 
@@ -435,7 +475,8 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<LaborReason>("apis/360facility/v1/laborreasons", filter, expand,
+            return await Get<LaborReason>(
+                "apis/360facility/v1/laborreasons", filter, expand,
                 offset,
                 limit);
         }
@@ -445,12 +486,14 @@ namespace Famis
             string expand = null,
             int offset = 0,
             int limit = -1) {
-            return await Get<AccountSegmentNPFA>("apis/360facility/v1/accountsegmentnpfa", filter,
+            return await Get<AccountSegmentNPFA>(
+                "apis/360facility/v1/accountsegmentnpfa", filter,
                 expand, offset, limit);
         }
 
         public async Task<AccountSegmentNPFA> GetAcctSegNpfa(string id, string expand = null) {
-            return await GetOne<AccountSegmentNPFA>("apis/360facility/v1/accountsegmentnpfa", id,
+            return await GetOne<AccountSegmentNPFA>(
+                "apis/360facility/v1/accountsegmentnpfa", id,
                 expand);
         }
 
@@ -483,8 +526,10 @@ namespace Famis
             await AuthorizeIfNeeded();
 
             var body =
-                await _client.GetStringAsync(BuildUri(endpoint, $"Id eq {id}", expand, offset,
-                    limit));
+                await _client.GetStringAsync(
+                    BuildUri(
+                        endpoint, $"Id eq {id}", expand, offset,
+                        limit));
             var odataResp = JsonConvert.DeserializeObject<ODataResponse<T>>(body);
             if (odataResp.Value.Count > 0) {
                 return odataResp.Value.First();
@@ -719,7 +764,8 @@ namespace Famis
         }
 
         public async Task<UpsertResponse<OtherCost>> PostOtherCost(OtherCost otherCost) {
-            var body = JsonConvert.SerializeObject(otherCost, Formatting.None,
+            var body = JsonConvert.SerializeObject(
+                otherCost, Formatting.None,
                 new JsonSerializerSettings {
                     NullValueHandling = NullValueHandling.Ignore
                 });

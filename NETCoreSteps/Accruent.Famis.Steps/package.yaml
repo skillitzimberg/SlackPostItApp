@@ -8,7 +8,7 @@ executables:
     amd64: Accruent.Famis.Steps.dll
   windows:
     amd64: Accruent.Famis.Steps.dll
-    
+
 steps:
   update@1.0:
     description: ''
@@ -213,3 +213,124 @@ steps:
       sample: ''
 
 
+      User:
+        required: true
+        description: User to create or update
+        sample: ''
+    outputs:
+      Success:
+        description: True if the user was created successfully
+      User:
+        description: The newly created user. Will contain the ID of the user.
+      Message:
+        description: Contains the response message from the FAMIS services
+  create_user_mock@1.0:
+    description: ''
+    inputs:
+      User:
+        required: true
+        description: User to create or update
+        sample: ''
+    outputs:
+      Success:
+        description: True if the user was created successfully
+      User:
+        description: The newly created user. Will contain the ID of the user.
+      Message:
+        description: Contains the response message from the FAMIS services
+  convert_banner_user@1.0:
+    description: Converts a Banner Requester to a Famis User.
+    inputs:
+      BannerUser:
+        required: true
+        description: The banner requester to convert
+        sample: ''
+      ProfileId:
+        required: true
+        description: The default profile id to apply to this user. This is a required field in FAMIS.
+        sample: ''
+      StateId:
+        required: true
+        description: The default State id to apply to this user. This is a required field in FAMIS
+        sample: ''
+      CountryId:
+        required: true
+        description: The default Country id to apply to this user. This is a required field in FAMIS
+        sample: ''
+      ActiveFlag:
+        required: true
+        description: The Active status of this user in FAMIS. This is a required field in FAMIS
+        sample: ''
+      CompanyId:
+        required: true
+        description: The default Company id to apply to this user. This is a required field in FAMIS
+        sample: ''
+      Addr1:
+        required: true
+        description: The default Street address to apply to this user. This is a required field in FAMIS
+        sample: ''
+      City:
+        required: true
+        description: The default City to apply to this user. This is a required field in FAMIS
+        sample: ''
+      Zip:
+        required: true
+        description: The default Zip to apply to this user. This is a required field in FAMIS
+        sample: ''
+    outputs:
+      FamisUser:
+        description: The converted famis user
+  fetch_record@1.0:
+    description: 'this service will fetch a single record from famis'
+    inputs:
+      Url:
+        required: true
+        description: FAMIS service url
+      Endpoint:
+        required: true
+        description: the url endpoint for the required record type
+      Username:
+        required: true
+        description: FAMIS service username
+      Password:
+        required: true
+        description: FAMIS service password
+      RecordId:
+        required: true
+        description: The ID of the record being fetched
+      Expand:
+        required: false
+        description: User to create or update
+    outputs:
+      Record:
+        description: The returned record which was fetched
+  fetch_records@1.0:
+    description: 'this service will fetch a list of records from famis'
+    inputs:
+      Url:
+        required: true
+        description: FAMIS service url
+      Endpoint:
+        required: true
+        description: the url endpoint for the required record type
+      Username:
+        required: true
+        description: FAMIS service username
+      Password:
+        required: true
+        description: FAMIS service password
+      Filter:
+        required: false
+        description: An optional filter to use
+      Expand:
+        required: false
+        description: User to create or update
+      Offset:
+        required: false
+        description: an optional offset value 
+      Limit:
+        required: false
+        description: an optional limit to the number of records fetched
+    outputs:
+      Records:
+        description: The returned records that were fetched
