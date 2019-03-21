@@ -17,10 +17,15 @@ type RowOutput struct {
 	Results []map[string]interface{}
 }
 
+type InsertBatchCommand struct {
+	DatabaseCommand
+	Records []map[string]interface{}
+	Fields  []string
+}
+
 type InsertCommand struct {
 	DatabaseCommand
-	Records     []map[string]interface{}
-	ValueFields []string
+	Record map[string]interface{}
 }
 
 func ScanIntoMap(rows *sql.Rows, cols []string) (map[string]interface{}, error) {

@@ -40,7 +40,7 @@ func (InsertBatch) Version() string {
 }
 
 func (InsertBatch) Execute(ctx step.Context) (interface{}, error) {
-	input := &db_common.InsertCommand{}
+	input := &db_common.InsertBatchCommand{}
 	err := ctx.BindInputs(input)
 	if err != nil {
 		return nil, err
@@ -75,4 +75,30 @@ func (QueryAndQueue) Execute(ctx step.Context) (interface{}, error) {
 		return nil, err
 	}
 	return db_common.PerformQueryAndQueue(db, input, ctx.Engine())
+}
+
+type Execute struct {
+}
+
+func (Execute) Name() string {
+	return "execute"
+}
+
+func (Execute) Version() string {
+	return "1.0"
+}
+
+func (Execute) Execute(in step.Context) (interface{}, error) {
+	input := db_common.DatabaseCommand{}
+	err := in.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	println(input.ConnectionString)
+	db, err := sql.Open("goracle", input.ConnectionString)
+	if err != nil {
+		return nil, err
+	}
+	_, err = db_common.ExecuteStatement(db, &input)
+	return nil, err
 }
