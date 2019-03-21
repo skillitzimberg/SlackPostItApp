@@ -1,6 +1,9 @@
 package main
 
-import "github.com/apptreesoftware/go-workflow/pkg/step"
+import (
+	"github.com/apptreesoftware/go-workflow/pkg/step"
+	"github.com/pkg/errors"
+)
 
 type ExtractFields struct {
 
@@ -22,6 +25,12 @@ func (ExtractFields) Execute(ctx step.Context) (interface{}, error) {
 	}
 
 	record := inputs.Record
+	if record == nil {
+		return nil, errors.New("record input is required")
+	}
+	if inputs.Fields == nil {
+		return nil, errors.New("fields to extract is required")
+	}
 	subRecord := make(map[string]interface{})
 	for _, fieldName := range inputs.Fields {
 		subRecord[fieldName] = record[fieldName]
