@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Famis.Model;
+using JsonMap = System.Collections.Generic.Dictionary<string, object>;
 
 namespace Famis
 {
@@ -243,5 +244,8 @@ namespace Famis
         Task<UpsertResponse<Company>> PostCompany(Company com);
 
         Task<UpsertResponse<WorkOrder>> PostWo(CreateWorkOrder wo);
+
+        Task<UpsertResponse<JsonMap>> CreateRecord(string endpoint, JsonMap obj);
+        Task<UpsertResponse<JsonMap>> UpdateRecord(string endpoint, JsonMap obj, string idField = "id");
     }
 }

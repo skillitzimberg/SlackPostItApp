@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Famis.Model;
 using Newtonsoft.Json;
+using JsonMap = System.Collections.Generic.Dictionary<string, object>;
 
 namespace Famis
 {
@@ -15,9 +18,11 @@ namespace Famis
         private readonly HttpClient _client;
         private AuthResponse _authResponse;
         private readonly string _baseUri;
+
         private JsonSerializerSettings ignoreNullSetting = new JsonSerializerSettings() {
             NullValueHandling = NullValueHandling.Ignore
         };
+
         private Formatting noFormatting = Formatting.None;
 
 
@@ -323,7 +328,7 @@ namespace Famis
             };
             HttpResponseMessage response = await _client.SendAsync(request);
             if (response.IsSuccessStatusCode) {
-              Console.WriteLine(response.Content.ToString());
+                Console.WriteLine(response.Content.ToString());
                 var successUser =
                     JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
                 return new UpsertResponse<User>(true, null, successUser);
@@ -733,6 +738,69 @@ namespace Famis
                 JsonConvert.DeserializeObject<FamisHttpResponse>(
                     await response.Content.ReadAsStringAsync());
             return new UpsertResponse<OtherCost>(false, failResponse.Message, null);
+        }
+
+        public delegate Task<UpsertResponse<JsonMap>> PersistFunction(
+            string url,
+            StringContent content);
+
+        public async Task<UpsertResponse<JsonMap>> CreateRecord(
+            string endpoint,
+            JsonMap obj) {
+            var body = JsonConvert.SerializeObject(obj);
+            await AuthorizeIfNeeded();
+            var url = _baseUri + endpoint;
+            var content = new StringContent(body, Encoding.UTF8, "application/json");
+            return await UpsertRecord(url, content, createRecord());
+        }
+
+        public async Task<UpsertResponse<JsonMap>> UpdateRecord(
+            string endpoint,
+            JsonMap obj,
+            string idField) {
+            // get the entity id from the entity
+            var id = (string) obj[idField];
+            //
+            var body = JsonConvert.SerializeObject(obj);
+            await AuthorizeIfNeeded();
+            // append id as the key for update
+            var url = _baseUri + endpoint + $"?key={id}";
+            var content = new StringContent(body, Encoding.UTF8, "application/json");
+            return await UpsertRecord(url, content, updateRecord());
+        }
+
+
+        public Task<UpsertResponse<JsonMap>> UpsertRecord(
+            string url,
+            StringContent content,
+            PersistFunction func) {
+            return func(url, content);
+        }
+
+        public PersistFunction createRecord() {
+            return async (url, content) => {
+                var response = await _client.PostAsync(url, content);
+                return await handleResponse(response);
+            };
+        }
+
+        public PersistFunction updateRecord() {
+            return async (url, content) => {
+                var response = await _client.PutAsync(url, content);
+                return await handleResponse(response);
+            };
+        }
+
+        public static async Task<UpsertResponse<JsonMap>> handleResponse(
+            HttpResponseMessage response) {
+            var responseBody = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode) {
+                var record = JsonConvert.DeserializeObject<JsonMap>(responseBody);
+                return new UpsertResponse<JsonMap>(true, null, record);
+            }
+
+            var failResponse = JsonConvert.DeserializeObject<FamisHttpResponse>(responseBody);
+            return new UpsertResponse<JsonMap>(false, failResponse.Message, null);
         }
     }
 }
