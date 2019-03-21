@@ -8,6 +8,7 @@ func main() {
 	step.Register(ParseJsonObject{})
 	step.Register(MapRecords{})
 	step.Register(SetFields{})
+	step.Register(ExtractFields{})
 
 	step.Run()
 }
