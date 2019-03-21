@@ -50,8 +50,13 @@ namespace Famis {
                 $"{authResponse.Item.TokenType} {authResponse.Item.AccessToken}");
         }
 
-        public async Task<object> GetRecord(string endpoint, string id, string expand) {
-            return await GetOne<object>(endpoint, id, expand);
+        public async Task<object> GetRecord(string endpoint, string filter, string expand) {
+            var resp = await Get<object>(endpoint, filter, expand);
+            if (resp.PageResults.Count > 0) {
+                return resp.PageResults[0];
+            }
+
+            return null;
         }
 
         public async Task<List<object>> GetRecords(

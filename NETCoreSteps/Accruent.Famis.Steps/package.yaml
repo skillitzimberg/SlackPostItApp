@@ -107,9 +107,9 @@ steps:
       Password:
         required: true
         description: FAMIS service password
-      RecordId:
+      Filter:
         required: true
-        description: The ID of the record being fetched
+        description: The filter to use when fetching record
       Expand:
         required: false
         description: User to create or update
