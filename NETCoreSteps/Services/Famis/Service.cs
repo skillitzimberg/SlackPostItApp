@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -759,14 +760,22 @@ namespace Famis
             JsonMap obj,
             string idField) {
             // get the entity id from the entity
-            var id = (string) obj[idField];
-            //
+            var id = getIdFromObj(obj, idField);
             var body = JsonConvert.SerializeObject(obj);
             await AuthorizeIfNeeded();
             // append id as the key for update
             var url = _baseUri + endpoint + $"?key={id}";
             var content = new StringContent(body, Encoding.UTF8, "application/json");
             return await UpsertRecord(url, content, updateRecord());
+        }
+
+
+        private static int getIdFromObj(JsonMap obj, string idField) {
+            var id = (Int64) obj[idField];
+            // remove the id field because FAMIS will not let you update
+            // if it is present in the object
+            obj.Remove(idField);
+            return Convert.ToInt32(id);
         }
 
 
@@ -786,7 +795,7 @@ namespace Famis
 
         private PersistFunction updateRecord() {
             return async (url, content) => {
-                var response = await _client.PutAsync(url, content);
+                var response = await _client.PatchAsync(url, content);
                 return await handleResponse(response);
             };
         }

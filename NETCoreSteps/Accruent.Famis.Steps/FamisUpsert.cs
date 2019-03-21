@@ -15,5 +15,16 @@ namespace Accruent.Famis.Steps
 
         [Input(Description = "the endpoint of the entity you are trying to update")]
         public string IdField { get; set; }
+        
+        [Output(Description = "the success status of the upsert")]
+        public bool Success { get; set; }
+        
+        [Output(Description = "the response message of the upsert")]
+        public string Message { get; set; }
+        
+        [Output(Description = "the returned record from the upsert")]
+        public object Record { get; set; }
+
+
     }
 }

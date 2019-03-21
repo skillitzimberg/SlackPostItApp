@@ -246,6 +246,6 @@ namespace Famis
         Task<UpsertResponse<WorkOrder>> PostWo(CreateWorkOrder wo);
 
         Task<UpsertResponse<JsonMap>> CreateRecord(string endpoint, JsonMap obj);
-        Task<UpsertResponse<JsonMap>> UpdateRecord(string endpoint, JsonMap obj, string idField = "id");
+        Task<UpsertResponse<JsonMap>> UpdateRecord(string endpoint, JsonMap obj, string idField);
     }
 }

@@ -10,9 +10,21 @@ executables:
     amd64: Accruent.Famis.Steps.dll
     
 steps:
-  create_user@1.0:
+  update@1.0:
     description: ''
     inputs:
+      Object:
+        required: true
+        description: a json formatted object that you would like to create or update
+        sample: ''
+      Endpoint:
+        required: true
+        description: the endpoint of the entity you are trying to update
+        sample: ''
+      IdField:
+        required: true
+        description: the endpoint of the entity you are trying to update
+        sample: ''
       Url:
         required: true
         description: FAMIS service url
@@ -25,70 +37,179 @@ steps:
         required: true
         description: FAMIS service password
         sample: ''
-      User:
-        required: true
-        description: User to create or update
-        sample: ''
     outputs:
       Success:
-        description: True if the user was created successfully
-      User:
-        description: The newly created user. Will contain the ID of the user.
+        description: the success status of the upsert
       Message:
-        description: Contains the response message from the FAMIS services
-  create_user_mock@1.0:
-    description: ''
-    inputs:
-      User:
-        required: true
-        description: User to create or update
-        sample: ''
-    outputs:
-      Success:
-        description: True if the user was created successfully
-      User:
-        description: The newly created user. Will contain the ID of the user.
-      Message:
-        description: Contains the response message from the FAMIS services
-  convert_banner_user@1.0:
-    description: Converts a Banner Requester to a Famis User.
-    inputs:
-      BannerUser:
-        required: true
-        description: The banner requester to convert
-        sample: ''
-      ProfileId:
-        required: true
-        description: The default profile id to apply to this user. This is a required field in FAMIS.
-        sample: ''
-      StateId:
-        required: true
-        description: The default State id to apply to this user. This is a required field in FAMIS
-        sample: ''
-      CountryId:
-        required: true
-        description: The default Country id to apply to this user. This is a required field in FAMIS
-        sample: ''
-      ActiveFlag:
-        required: true
-        description: The Active status of this user in FAMIS. This is a required field in FAMIS
-        sample: ''
-      CompanyId:
-        required: true
-        description: The default Company id to apply to this user. This is a required field in FAMIS
-        sample: ''
-      Addr1:
-        required: true
-        description: The default Street address to apply to this user. This is a required field in FAMIS
-        sample: ''
-      City:
-        required: true
-        description: The default City to apply to this user. This is a required field in FAMIS
-        sample: ''
-      Zip:
-        required: true
-        description: The default Zip to apply to this user. This is a required field in FAMIS
-        sample: ''
-    outputs:
-      FamisUser:
-        description: The converted famis user
+        description: the response message of the upsert
+      Record:
+        description: the returned record from the upsert
+    sample: ''
+    fetch_user@1.0:
+      description: Fetches a user from famis
+      inputs:
+        Filter:
+          required: true
+          description: The filter to use when fetching a user
+          sample: ''
+        Url:
+          required: true
+          description: FAMIS service url
+          sample: ''
+        Username:
+          required: true
+          description: FAMIS service username
+          sample: ''
+        Password:
+          required: true
+          description: FAMIS service password
+          sample: ''
+      outputs:
+        User:
+          description: The user that was fetched from FAMIS
+      sample: ''
+    create@1.0:
+      description: ''
+      inputs:
+        Object:
+          required: true
+          description: a json formatted object that you would like to create or update
+          sample: ''
+        Endpoint:
+          required: true
+          description: the endpoint of the entity you are trying to update
+          sample: ''
+        IdField:
+          required: true
+          description: the endpoint of the entity you are trying to update
+          sample: ''
+        Url:
+          required: true
+          description: FAMIS service url
+          sample: ''
+        Username:
+          required: true
+          description: FAMIS service username
+          sample: ''
+        Password:
+          required: true
+          description: FAMIS service password
+          sample: ''
+      outputs:
+        Success:
+          description: the success status of the upsert
+        Message:
+          description: the response message of the upsert
+        Record:
+          description: the returned record from the upsert
+      sample: ''
+    create_user@1.0:
+      description: ''
+      inputs:
+        User:
+          required: true
+          description: User to create or update
+          sample: ''
+        Url:
+          required: true
+          description: FAMIS service url
+          sample: ''
+        Username:
+          required: true
+          description: FAMIS service username
+          sample: ''
+        Password:
+          required: true
+          description: FAMIS service password
+          sample: ''
+      outputs:
+        Success:
+          description: True if the user was created successfully
+        User:
+          description: The newly created user. Will contain the ID of the user.
+        Message:
+          description: Contains the response message from the FAMIS services
+      sample: ''
+    create_user_mock@1.0:
+      description: ''
+      inputs:
+        User:
+          required: true
+          description: User to create or update
+          sample: ''
+        Url:
+          required: true
+          description: FAMIS service url
+          sample: ''
+        Username:
+          required: true
+          description: FAMIS service username
+          sample: ''
+        Password:
+          required: true
+          description: FAMIS service password
+          sample: ''
+      outputs:
+        Success:
+          description: True if the user was created successfully
+        User:
+          description: The newly created user. Will contain the ID of the user.
+        Message:
+          description: Contains the response message from the FAMIS services
+      sample: ''
+    convert_concur_charge@1.0:
+      description: ''
+      inputs:
+        ChargeLine:
+          required: true
+          description: The pipe delimited charge from the concur file
+          sample: ''
+      outputs:
+        Record:
+          description: A FAMIS Other cost converted from a concur charge
+      sample: ''
+    convert_banner_user@1.0:
+      description: Converts a Banner Requester to a Famis User.
+      inputs:
+        BannerUser:
+          required: true
+          description: The banner requester to convert
+          sample: ''
+        ProfileId:
+          required: true
+          description: The default profile id to apply to this user. This is a required field in FAMIS.
+          sample: ''
+        StateId:
+          required: true
+          description: The default State id to apply to this user. This is a required field in FAMIS
+          sample: ''
+        CountryId:
+          required: true
+          description: The default Country id to apply to this user. This is a required field in FAMIS
+          sample: ''
+        ActiveFlag:
+          required: true
+          description: The Active status of this user in FAMIS. This is a required field in FAMIS
+          sample: ''
+        CompanyId:
+          required: true
+          description: The default Company id to apply to this user. This is a required field in FAMIS
+          sample: ''
+        Addr1:
+          required: true
+          description: The default Street address to apply to this user. This is a required field in FAMIS
+          sample: ''
+        City:
+          required: true
+          description: The default City to apply to this user. This is a required field in FAMIS
+          sample: ''
+        Zip:
+          required: true
+          description: The default Zip to apply to this user. This is a required field in FAMIS
+          sample: ''
+      outputs:
+        FamisUser:
+          description: The converted famis user
+      sample: ''
+
+
