@@ -777,21 +777,21 @@ namespace Famis
             return func(url, content);
         }
 
-        public PersistFunction createRecord() {
+        private PersistFunction createRecord() {
             return async (url, content) => {
                 var response = await _client.PostAsync(url, content);
                 return await handleResponse(response);
             };
         }
 
-        public PersistFunction updateRecord() {
+        private PersistFunction updateRecord() {
             return async (url, content) => {
                 var response = await _client.PutAsync(url, content);
                 return await handleResponse(response);
             };
         }
 
-        public static async Task<UpsertResponse<JsonMap>> handleResponse(
+        private static async Task<UpsertResponse<JsonMap>> handleResponse(
             HttpResponseMessage response) {
             var responseBody = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode) {
