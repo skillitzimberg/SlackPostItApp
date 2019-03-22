@@ -39,7 +39,7 @@ type Fetcher struct {
 	authToken    string
 	refreshToken string
 	expiration   time.Time
-	_client      *http.Client
+	client       *http.Client
 	username     string
 	password     string
 	url          string
@@ -70,18 +70,23 @@ func (Fetcher) Version() string {
 	return "1.0"
 }
 
-func (fetch *Fetcher) Execute(in step.Context) (interface{}, error) {
+func (fetch Fetcher) Execute(in step.Context) (interface{}, error) {
 	input := FetchInputs{}
 	err := in.BindInputs(&input)
 	if err != nil {
 		return nil, err
 	}
+	return fetch.execute(input)
+}
+
+func (fetch Fetcher) execute(input FetchInputs) (interface{}, error) {
 	// set the username and pass on the fetcher
 	fetch.username = input.Username
 	fetch.password = input.Password
 	fetch.url = input.Url
 	// first thing we need to do is login to the FAMIS services
 	// we require Username, Password, and Url so we do not have to validate the values
+	var err error
 	fetch.authToken, fetch.refreshToken, fetch.expiration, err = fetch.Login(input.Username, input.Password, input.Url)
 	if err != nil {
 		return nil, err
@@ -324,10 +329,10 @@ func getUrl(base, endpoint string) (*url.URL, error) {
 }
 
 func (fetch *Fetcher) getHttpClient() *http.Client {
-	if fetch._client == nil {
-		fetch._client = &http.Client{}
+	if fetch.client == nil {
+		fetch.client = &http.Client{}
 	}
-	return fetch._client
+	return fetch.client
 }
 
 func parseExpirationDate(date string) (time.Time, error) {
