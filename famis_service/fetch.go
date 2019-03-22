@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
+	json "github.com/json-iterator/go"
 	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
@@ -34,6 +34,7 @@ const contentTypeHeaderKey = "Content-Type"
 const bearer = "Bearer"
 const nextLinkKey = "@odata.nextLink"
 const valueKey = "value"
+const defaultTimeout = time.Minute * 1
 
 type Fetcher struct {
 	authToken    string
@@ -73,6 +74,15 @@ func (Fetcher) Version() string {
 func (fetch Fetcher) Execute(in step.Context) (interface{}, error) {
 	input := FetchInputs{}
 	err := in.BindInputs(&input)
+	if err != nil {
+		return nil, err
+	}
+	return fetch.execute(input)
+}
+
+func (fetch Fetcher) ExecuteJson(js string) (interface{}, error) {
+	input := FetchInputs{}
+	err := json.Unmarshal([]byte(js), &input)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +131,10 @@ func (fetch Fetcher) FetchList(url, endpoint, filter, sel string, size int) (Fet
 
 	records := make([]JsonMap, 0)
 	data, err := fetch.exhaustFetch(request, records)
-	return FetchListOutputs{Records: data}, nil
+	if err != nil {
+		return FetchListOutputs{}, err
+	}
+	return FetchListOutputs{Records: data, Count: len(data)}, nil
 }
 
 func (fetch Fetcher) exhaustFetch(req http.Request, records []JsonMap) ([]JsonMap, error) {
@@ -148,6 +161,10 @@ func (fetch Fetcher) exhaustFetch(req http.Request, records []JsonMap) ([]JsonMa
 	// else we assume we're done
 	nextLink := data[nextLinkKey]
 	if link, ok := nextLink.(string); ok {
+		// the link is sent with http
+		// and you can't connect to the famis service with http
+		// replace http with https
+		link = strings.Replace(link, "http", "https", 1)
 		newUrl, err := url.Parse(link)
 		if err != nil {
 			return nil, err
@@ -217,7 +234,7 @@ func addValuesToRecords(values []interface{}, records *[]JsonMap) {
 
 	for _, val := range values {
 		// TODO what do we do if we can't convert?
-		data, ok := val.(JsonMap)
+		data, ok := val.(map[string]interface{})
 		if ok {
 			// append value to values of pointer
 			*records = append(*records, data)
@@ -330,7 +347,9 @@ func getUrl(base, endpoint string) (*url.URL, error) {
 
 func (fetch *Fetcher) getHttpClient() *http.Client {
 	if fetch.client == nil {
-		fetch.client = &http.Client{}
+		fetch.client = &http.Client{
+			Timeout: defaultTimeout,
+		}
 	}
 	return fetch.client
 }
