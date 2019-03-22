@@ -9,8 +9,7 @@ namespace Accruent.Famis.Steps.Update
     {
         public override async Task ExecuteAsync() {
             var service = new Service(Url, Username, Password);
-            IdField = IdField ?? "Id";
-            var resp = await service.UpdateRecord(Endpoint, Object, IdField);
+            var resp = await service.UpdateRecord(Endpoint, Object, Id);
             Message = resp.Message;
             Record = resp.Object;
             Success = resp.Success;
