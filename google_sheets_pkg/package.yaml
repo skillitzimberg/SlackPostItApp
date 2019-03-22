@@ -49,21 +49,17 @@ steps:
         required: false
         description: "The index of the sheet you want to use. Defaults to the first sheet."
         sample: 0
-      Record:
-        required: true
-        description: "The record you'd like to write to google sheets"
-        sample: ""
       Credentials:
         required: true
         description: "Your Google Sheets credentials JSON. To create your credentials see https://developers.google.com/sheets/api/quickstart/go"
         sample: '{}'
-      Fields:
+      Cells:
         required: true
-        description: "The names of the fields in the order they are defined within the spreadsheet"
+        description: "The string values you want to write to each row, in order"
         sample: |
-          - firstName
-          - lastName
-          - email
+          - "NewRecord"
+          - ${SomeVar}
+          - "August10"
       MatchValue:
         required: false
         description: "The value used to identify the record to update"

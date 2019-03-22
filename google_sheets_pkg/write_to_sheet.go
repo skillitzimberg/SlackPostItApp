@@ -44,16 +44,6 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 		return err
 	}
 
-	// Row names defaults to Record name is user doesn't pass in fields
-	var fields []string
-	if input.Fields != nil && len(input.Fields) != 0 {
-		fields = input.Fields
-	} else {
-		for k := range input.Record {
-			fields = append(fields, k)
-		}
-	}
-
 	isUpdate := false
 	// If user put `MatchValue` input AND Document isn't brand new
 	// sheet.Rows refers to the number of rows _with_ data in the Sheet
@@ -90,8 +80,8 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 	}
 
 	// Update the record
-	for k, v := range fields {
-		cellVal := input.Record[v]
+	for k, v := range input.Cells {
+		cellVal := v
 		sheet.Update(int(newRow), k, fmt.Sprintf("%v", cellVal))
 	}
 	err = sheet.Synchronize()
@@ -102,8 +92,7 @@ type WriteToSheetInput struct {
 	SpreadsheetId string
 	SheetIndex    uint
 	Credentials   string
-	Fields        []string
-	Record        map[string]interface{}
+	Cells         []string
 	MatchColumn   int
 	MatchValue    string
 }
