@@ -141,6 +141,7 @@ func (fetch Fetcher) FetchList(url, endpoint, filter, sel string, size int) (Fet
 	return FetchListOutputs{Records: data, Count: len(data)}, nil
 }
 
+
 func (fetch Fetcher) FetchSingle(url, endpoint, sel, idField string, id int) (FetchSingleOutput, error) {
 	fetchUrl, err := getUrl(url, endpoint)
 	if err != nil {
