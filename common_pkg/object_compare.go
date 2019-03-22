@@ -110,6 +110,7 @@ func (diff ObjectCompare) fieldsDiffer(field string, left JsonMap, right JsonMap
 	if leftData == nil && rightData == nil {
 		return false
 	}
+
 	// are these types comparable?
 	// if not deepEqual
 	// in most cases the non comparable data types are slices and maps
