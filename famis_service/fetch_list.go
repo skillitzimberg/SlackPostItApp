@@ -47,7 +47,7 @@ type Fetcher struct {
 	url          string
 }
 
-type FetchInputs struct {
+type FetchListInputs struct {
 	Username  string
 	Password  string
 	Url       string
@@ -73,7 +73,7 @@ func (Fetcher) Version() string {
 }
 
 func (fetch Fetcher) Execute(in step.Context) (interface{}, error) {
-	input := FetchInputs{}
+	input := FetchListInputs{}
 	err := in.BindInputs(&input)
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (fetch Fetcher) Execute(in step.Context) (interface{}, error) {
 }
 
 func (fetch Fetcher) ExecuteJson(js string) (interface{}, error) {
-	input := FetchInputs{}
+	input := FetchListInputs{}
 	err := json.Unmarshal([]byte(js), &input)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (fetch Fetcher) ExecuteJson(js string) (interface{}, error) {
 	return fetch.execute(input)
 }
 
-func (fetch Fetcher) execute(input FetchInputs) (interface{}, error) {
+func (fetch Fetcher) execute(input FetchListInputs) (interface{}, error) {
 	// set the username and pass on the fetcher
 	fetch.username = input.Username
 	fetch.password = input.Password
