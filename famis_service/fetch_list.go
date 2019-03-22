@@ -137,6 +137,32 @@ func (fetch Fetcher) FetchList(url, endpoint, filter, sel string, size int) (Fet
 	return FetchListOutputs{Records: data, Count: len(data)}, nil
 }
 
+func (fetch Fetcher) FetchSingle(url, endpoint, sel, idField string, id int) (FetchSingleOutput, error) {
+	fetchUrl, err := getUrl(url, endpoint)
+	if err != nil {
+		return FetchSingleOutput{}, err
+	}
+	// add select query param if it applies
+	if len(sel) > 0 {
+		fetchUrl.Query().Add(selectKey, sel)
+	}
+	// add the single fetch filter
+	fetchUrl.Query().Add(filterKey, fmt.Sprintf("%s eq %d", idField, id))
+	// make request
+	request := getFetchRequest(fetchUrl, fetch.authToken)
+	// send the request
+	resp, err := fetch.getHttpClient().Do(&request)
+	if err != nil {
+		return FetchSingleOutput{}, nil
+	}
+	// conver the response to a JsonMap
+	data, err := handleFetchResponse(resp)
+	if err != nil {
+		return FetchSingleOutput{}, nil
+	}
+	return handleSingleResponse(data)
+}
+
 func (fetch Fetcher) exhaustFetch(req http.Request, records []JsonMap) ([]JsonMap, error) {
 	// refreshed auth if we need to
 	if err := fetch.RefreshIfNeeded(); err != nil {
@@ -272,6 +298,20 @@ func handleFetchResponse(resp *http.Response) (JsonMap, error) {
 		return nil, err
 	}
 	return data, nil
+}
+
+func handleSingleResponse(data JsonMap) (FetchSingleOutput, error) {
+	values := data[valueKey]
+	res, ok := values.([]interface{})
+	if !ok {
+		return FetchSingleOutput{}, nil
+	}
+	if len(res) < 1 {
+		return FetchSingleOutput{}, nil
+	}
+
+	curData := res[0].(map[string]interface{})
+	return FetchSingleOutput{Record: curData, Found: true}, nil
 }
 
 func handleLoginResponse(resp *http.Response) (string, string, time.Time, error) {
