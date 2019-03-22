@@ -64,3 +64,9 @@ steps:
           - firstName
           - lastName
           - email
+      MatchValue:
+        required: false
+        description: "The value used to identify the record to update"
+      MatchColumn:
+        required: false
+        description: "The db column used to identify the record to update"
