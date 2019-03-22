@@ -12,8 +12,10 @@ using Famis.Model;
 using Newtonsoft.Json;
 using JsonMap = System.Collections.Generic.Dictionary<string, object>;
 
-namespace Famis {
-    public class Service : IService {
+namespace Famis
+{
+    public class Service : IService
+    {
         private readonly Credentials _creds;
         private readonly HttpClient _client;
         private AuthResponse _authResponse;
@@ -793,7 +795,9 @@ namespace Famis {
         }
 
         // method for persisting records to FAMIS
-        public delegate Task<UpsertResponse<JsonMap>> PersistFunction(string url, StringContent content);
+        public delegate Task<UpsertResponse<JsonMap>> PersistFunction(
+            string url,
+            StringContent content);
 
         public async Task<UpsertResponse<JsonMap>> CreateRecord(
             string endpoint,
@@ -808,14 +812,11 @@ namespace Famis {
         public async Task<UpsertResponse<JsonMap>> UpdateRecord(
             string endpoint,
             JsonMap obj,
-            string idField) {
-            // get the entity id from the entity
-            var id = getIdFromObj(obj, idField);
-            
+            int idValue) {
             var body = JsonConvert.SerializeObject(obj);
             await AuthorizeIfNeeded();
             // append id as the key for update
-            var url = _baseUri + endpoint + $"?key={id}";
+            var url = _baseUri + endpoint + $"?key={idValue}";
             var content = new StringContent(body, Encoding.UTF8, "application/json");
             return await UpsertRecord(url, content, updateRecord());
         }

@@ -207,5 +207,5 @@ steps:
       outputs:
         FamisUser:
           description: The converted famis user
-      sample: ''
+          sample: ''
 
