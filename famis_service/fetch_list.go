@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
@@ -115,19 +116,22 @@ func (fetch Fetcher) FetchList(url, endpoint, filter, sel string, size int) (Fet
 	if err != nil {
 		return FetchListOutputs{}, err
 	}
+
+	query := fetchUrl.Query()
 	// add filter query param if it applies
 	if len(filter) > 0 {
-		fetchUrl.Query().Add(filterKey, filter)
+		query.Add(filterKey, filter)
 	}
 	// add select query param if it applies
 	if len(sel) > 0 {
-		fetchUrl.Query().Add(selectKey, sel)
+		query.Add(selectKey, sel)
 	}
 
 	// add top filter
-	fetchUrl.Query().Add(topKey, strconv.Itoa(size))
+	query.Add(topKey, strconv.Itoa(size))
 	// build fetch filter
 	request := getFetchRequest(fetchUrl, fetch.authToken)
+	request.URL.RawQuery = query.Encode()
 
 	records := make([]JsonMap, 0)
 	data, err := fetch.exhaustFetch(request, records)
@@ -142,14 +146,19 @@ func (fetch Fetcher) FetchSingle(url, endpoint, sel, idField string, id int) (Fe
 	if err != nil {
 		return FetchSingleOutput{}, err
 	}
+	query := fetchUrl.Query()
 	// add select query param if it applies
 	if len(sel) > 0 {
-		fetchUrl.Query().Add(selectKey, sel)
+		query.Add(selectKey, sel)
 	}
 	// add the single fetch filter
-	fetchUrl.Query().Add(filterKey, fmt.Sprintf("%s eq %d", idField, id))
+	query.Add(filterKey, fmt.Sprintf("%s eq %d", idField, id))
 	// make request
 	request := getFetchRequest(fetchUrl, fetch.authToken)
+	// add query params to fetch
+	request.URL.RawQuery = query.Encode()
+	cont, err := httputil.DumpRequest(&request, true)
+	println(string(cont))
 	// send the request
 	resp, err := fetch.getHttpClient().Do(&request)
 	if err != nil {
