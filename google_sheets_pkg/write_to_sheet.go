@@ -80,9 +80,8 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 	}
 
 	// Update the record
-	for k, v := range input.Cells {
-		cellVal := v
-		sheet.Update(int(newRow), k, fmt.Sprintf("%v", cellVal))
+	for colIdx, cellVal := range input.Cells {
+		sheet.Update(int(newRow), colIdx, fmt.Sprintf("%v", cellVal))
 	}
 	err = sheet.Synchronize()
 	return err
@@ -92,7 +91,7 @@ type WriteToSheetInput struct {
 	SpreadsheetId string
 	SheetIndex    uint
 	Credentials   string
-	Cells         []string
+	Cells         []interface{}
 	MatchColumn   int
 	MatchValue    string
 }
