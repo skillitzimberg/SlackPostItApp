@@ -9,6 +9,7 @@ func main() {
 	step.Register(MapRecords{})
 	step.Register(SetFields{})
 	step.Register(ExtractFields{})
+	step.Register(ParseLine{})
 
 	step.Run()
 }

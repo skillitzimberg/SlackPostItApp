@@ -51,3 +51,34 @@ steps:
       outputs:
         Record:
           description: the record with the fields extracted
+  parse_line@1.0:
+    inputs:
+      String:
+        required: true
+        description: The line of text you want to parse
+        sample: "Field1|Field2|Field3"
+      Delimiter:
+        required: true
+        description: Delimiter used to separate the fields
+        sample: "|"
+      StringFields:
+        required: false
+        description: A list of fields to parse as a string. The field name you want to parse out should be on the left, the index of the field on the right
+        sample: |
+          FieldA: 1
+          FieldB: 2
+      IntFields:
+        required: false
+        description: A list of fields to parse as an int. The field name you want to parse out should be on the left, the index of the field on the right
+        sample: |
+          FieldA: 1
+          FieldB: 2
+      FloatFields:
+        required: false
+        description: A list of fields to parse as an float. The field name you want to parse out should be on the left, the index of the field on the right
+        sample: |
+          FieldA: 1
+          FieldB: 2
+    outputs:
+      Record:
+        description: An object containing the parsed fields
