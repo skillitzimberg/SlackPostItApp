@@ -82,3 +82,87 @@ steps:
     outputs:
       Record:
         description: An object containing the parsed fields
+  date_format@1.0:
+    inputs:
+      Date:
+        required: true
+        description: The date you are wanting to change the format of
+        sample: 2019-10-09
+      InputFormat:
+        required: true
+        sample: 2006-01-02
+        description: |
+          The format of the date currently. Use this table to determine your format
+          Year	06   2006
+          Month	01   1   Jan   January
+          Day	02   2   _2   (width two, right justified)
+          Weekday	Mon   Monday
+          Hours	03   3   15
+          Minutes	04   4
+          Seconds	05   5
+          ms μs ns	.000   .000000   .000000000
+          ms μs ns	.999   .999999   .999999999   (trailing zeros removed)
+          am/pm	PM   pm
+          Timezone	MST
+          Offset	-0700   -07   -07:00   Z0700   Z07:00
+
+          For example, to parse a date in the format of 2019-09-10 you would use the input format of
+
+          2006-01-02
+
+          You can also specify one of the common formats
+            ANSIC       = "Mon Jan _2 15:04:05 2006"
+            UnixDate    = "Mon Jan _2 15:04:05 MST 2006"
+            RubyDate    = "Mon Jan 02 15:04:05 -0700 2006"
+            RFC822      = "02 Jan 06 15:04 MST"
+            RFC822Z     = "02 Jan 06 15:04 -0700"
+            RFC850      = "Monday, 02-Jan-06 15:04:05 MST"
+            RFC1123     = "Mon, 02 Jan 2006 15:04:05 MST"
+            RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700"
+            RFC3339     = "2006-01-02T15:04:05Z07:00"
+            RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
+            Kitchen     = "3:04PM"
+            // Handy time stamps.
+            Stamp      = "Jan _2 15:04:05"
+            StampMilli = "Jan _2 15:04:05.000"
+            StampMicro = "Jan _2 15:04:05.000000"
+            StampNano  = "Jan _2 15:04:05.000000000"
+      OutputFormat:
+        required: true
+        sample: 01-02-2006
+        description: |
+          The format of the date currently. Use this table to determine your format
+          Year	06   2006
+          Month	01   1   Jan   January
+          Day	02   2   _2   (width two, right justified)
+          Weekday	Mon   Monday
+          Hours	03   3   15
+          Minutes	04   4
+          Seconds	05   5
+          ms μs ns	.000   .000000   .000000000
+          ms μs ns	.999   .999999   .999999999   (trailing zeros removed)
+          am/pm	PM   pm
+          Timezone	MST
+          Offset	-0700   -07   -07:00   Z0700   Z07:00
+
+          For example, to parse a date in the format of 2019-09-10 you would use the input format of
+
+          2006-01-02
+
+          You can also specify one of the common formats
+          ANSIC       = "Mon Jan _2 15:04:05 2006"
+          UnixDate    = "Mon Jan _2 15:04:05 MST 2006"
+          RubyDate    = "Mon Jan 02 15:04:05 -0700 2006"
+          RFC822      = "02 Jan 06 15:04 MST"
+          RFC822Z     = "02 Jan 06 15:04 -0700"
+          RFC850      = "Monday, 02-Jan-06 15:04:05 MST"
+          RFC1123     = "Mon, 02 Jan 2006 15:04:05 MST"
+          RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700"
+          RFC3339     = "2006-01-02T15:04:05Z07:00"
+          RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
+          Kitchen     = "3:04PM"
+          // Handy time stamps.
+          Stamp      = "Jan _2 15:04:05"
+          StampMilli = "Jan _2 15:04:05.000"
+          StampMicro = "Jan _2 15:04:05.000000"
+          StampNano  = "Jan _2 15:04:05.000000000"

@@ -10,6 +10,7 @@ func main() {
 	step.Register(SetFields{})
 	step.Register(ExtractFields{})
 	step.Register(ParseLine{})
+	step.Register(DateFormat{})
 
 	step.Run()
 }
