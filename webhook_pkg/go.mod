@@ -2,4 +2,4 @@ module webhook
 
 go 1.12
 
-require github.com/apptreesoftware/go-workflow v0.0.0-20190320200413-de69942a84f5
+require github.com/apptreesoftware/go-workflow v0.0.0-20190325161958-22837a95fe8a
