@@ -33,7 +33,7 @@ publish-logger: build-logger |
 build-famis: |
 	cd NetCoreSteps/Accruent.Famis.Steps && dotnet publish -o publish -c Release
 publish-famis: build-famis |
-	apptree workflow package publish -d NetCoreSteps/Accruent.Famis.Steps/publish
+	apptree workflow package publish -d NetCoreSteps/Accruent.Famis.Steps/publish --host ${HOST}
 build-filesystem: |
 	cd filesystem_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-filesystem: build-filesystem |

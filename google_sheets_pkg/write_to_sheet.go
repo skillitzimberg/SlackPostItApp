@@ -44,22 +44,45 @@ func (WriteToSheet) execute(input WriteToSheetInput) error {
 		return err
 	}
 
-	// Row names defauls to Record name is user doesn't pass in fields
-	var fields []string
-	if input.Fields != nil && len(input.Fields) != 0 {
-		fields = input.Fields
-	} else {
-		for k := range input.Record {
-			fields = append(fields, k)
-		}
-	}
-	data := sheet.Properties.GridProperties
-	newRow := data.RowCount
-	for k, v := range fields {
-		cellVal := input.Record[v]
-		sheet.Update(int(newRow), k, fmt.Sprintf("%v", cellVal))
+	isUpdate := false
+	// If user put `MatchValue` input AND Document isn't brand new
+	// sheet.Rows refers to the number of rows _with_ data in the Sheet
+	// blank rows aren't counted.
+	if input.MatchValue != "" && len(sheet.Rows) > 0 {
+		isUpdate = true
 	}
 
+	// find the row to be updated, if it exists
+	recordRowIdxToUpdate := -1
+	if isUpdate {
+		for idx, row := range sheet.Rows {
+			if row[input.MatchColumn].Value == input.MatchValue {
+				recordRowIdxToUpdate = idx
+				break
+			}
+		}
+		if recordRowIdxToUpdate == -1 {
+			fmt.Printf("Record with value %s in column %v doesn't exist. Adding the record to the end of the sheet", input.MatchValue, input.MatchColumn)
+			isUpdate = false
+		}
+	}
+
+	// Finally, if this is an update form, update Row @ recordRowIdxToUpdate
+	data := sheet.Properties.GridProperties
+	var newRow int
+	if isUpdate {
+		newRow = recordRowIdxToUpdate
+		// If it isn't an update form,
+		// OR the record wasn't found
+		// add the record to the end
+	} else {
+		newRow = int(data.RowCount)
+	}
+
+	// Update the record
+	for colIdx, cellVal := range input.Cells {
+		sheet.Update(int(newRow), colIdx, fmt.Sprintf("%v", cellVal))
+	}
 	err = sheet.Synchronize()
 	return err
 }
@@ -68,6 +91,7 @@ type WriteToSheetInput struct {
 	SpreadsheetId string
 	SheetIndex    uint
 	Credentials   string
-	Fields        []string
-	Record        map[string]interface{}
+	Cells         []interface{}
+	MatchColumn   int
+	MatchValue    string
 }
