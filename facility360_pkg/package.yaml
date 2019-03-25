@@ -1,0 +1,73 @@
+name: facility360
+version: 1.0
+lang: go
+
+executables:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
+
+fetch_records: &fetch_records
+  Username:
+    required: true
+    description: 360facility/FAMIS username
+  Password:
+    required: true
+    description: 360facility/FAMIS password
+  Url:
+    required: true
+    description: 360facility/FAMIS environment url
+    sample: https://mycompany.famis.com
+  Endpoint:
+    required: true
+    description: The endpoint to fetch records from
+    sample: 'MobileWebServices/apis/360facility/v1/spaces'
+  Filter:
+    required: false
+    description: The ODATA formatted filter to use when querying the records
+    sample: Id eq 1
+  Select:
+    required: false
+    description: A comma delimited list of the fields you want to select. Leaving this empty will fetch all fields
+    sample: Id, StatusId
+  Expand:
+    required: false
+    description: A comma delimited list of the fields you want to expand
+    sample: Status,AssignedTo
+
+skip_top_inputs: &skip_top_inputs
+  Skip:
+    required: false
+    description: The offset you want to start fetching records from
+    sample: 100
+  Top:
+    required: false
+    description: The maximum amount of records to fetch
+    sample: 10
+
+steps:
+  get_record@1.0:
+    inputs:
+      <<: *fetch_records
+    outputs:
+      Record:
+        description: A record matching your filter
+      Found:
+        description: A boolean indicating whether a record was found
+  get_records@1.0:
+    inputs:
+      <<: *fetch_records
+      <<: *skip_top_inputs
+    outputs:
+      Records:
+        description: A list of records matching your request
+      Count:
+        description: The total number of records returned
+  get_records_and_queue@1.0:
+    inputs:
+      <<: *fetch_records
+      <<: *skip_top_inputs
+    outputs: {}
