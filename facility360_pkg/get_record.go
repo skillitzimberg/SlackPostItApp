@@ -6,28 +6,28 @@ import (
 	"net/http/httputil"
 )
 
-type FetchSingle struct {
+type GetRecord struct {
 	Fetch
 }
 
-func (FetchSingle) Name() string {
+func (GetRecord) Name() string {
 	return "get_record"
 }
 
-func (FetchSingle) Version() string {
+func (GetRecord) Version() string {
 	return "1.0"
 }
 
-func (fetch FetchSingle) Execute(in step.Context) (interface{}, error) {
+func (fetch GetRecord) Execute(in step.Context) (interface{}, error) {
 	input := FetchInput{}
 	err := in.BindInputs(&input)
 	if err != nil {
 		return nil, err
 	}
-	return fetch.execute(input)
+	return fetch.execute(input, in.Environment().Debug)
 }
 
-func (fetch FetchSingle) execute(input FetchInput) (interface{}, error) {
+func (fetch GetRecord) execute(input FetchInput, debug bool) (interface{}, error) {
 	// set the username and pass on the fetcher
 	fetch.username = input.Username
 	fetch.password = input.Password
@@ -55,9 +55,11 @@ func (fetch FetchSingle) execute(input FetchInput) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	b, err := httputil.DumpResponse(resp, true)
-	if err == nil {
-		println(string(b))
+	if debug {
+		b, err := httputil.DumpResponse(resp, true)
+		if err == nil {
+			println(string(b))
+		}
 	}
 	jsonResp, err := handleFetchResponse(resp)
 	if err != nil {

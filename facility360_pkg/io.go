@@ -129,3 +129,5 @@ type AuthItem struct {
 func (i AuthItem) GetExpiration() (time.Time, error) {
 	return time.Parse(time.RFC1123, strings.TrimSpace(i.Expires))
 }
+
+type JsonMap map[string]interface{}

@@ -82,8 +82,8 @@ func Test_SingleFetch(t *testing.T) {
 		Filter:   "Id eq 3",
 	}
 
-	fetcher := FetchSingle{}
-	out, err := fetcher.execute(fetchInput)
+	fetcher := GetRecord{}
+	out, err := fetcher.execute(fetchInput, true)
 	if err != nil {
 		t.Error(err.Error())
 		return

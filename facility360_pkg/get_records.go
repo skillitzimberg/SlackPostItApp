@@ -9,7 +9,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
@@ -95,21 +94,11 @@ func (fetch Fetch) performPagedFetch(uri *url.URL, endpoint string, handler Page
 		return err
 	}
 
-	b, err := httputil.DumpRequest(req, false)
-	if err == nil {
-		println(string(b))
-	}
-
 	resp, err := fetch.getHttpClient().Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-
-	b, err = httputil.DumpResponse(resp, true)
-	if err == nil {
-		println(string(b))
-	}
 
 	var parsedResp PagedResponse
 	if strings.HasSuffix(endpoint, "workorders") {
