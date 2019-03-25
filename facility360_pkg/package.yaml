@@ -70,4 +70,7 @@ steps:
     inputs:
       <<: *fetch_records
       <<: *skip_top_inputs
+      Workflow:
+        required: true
+        description: The workflow trigger for each returned record.
     outputs: {}

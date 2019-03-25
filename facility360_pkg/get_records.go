@@ -98,6 +98,11 @@ func (fetch Fetch) performPagedFetch(uri *url.URL, endpoint string, handler Page
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode == 404 {
+		return fmt.Errorf("The service responded with a status code of %d. Verify that your Url and Endpoint inputs are correct.", resp.StatusCode)
+	} else if resp.StatusCode != 200 {
+		return fmt.Errorf("The service responded with a status code of %d.", resp.StatusCode)
+	}
 	defer resp.Body.Close()
 
 	var parsedResp PagedResponse
