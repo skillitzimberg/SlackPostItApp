@@ -1,0 +1,77 @@
+name: 360facility
+version: 1.0
+lang: go
+
+executables:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
+
+
+fetch_inputs: &fetch_inputs
+  Username:
+    required: true
+    description: Famis/360facility username
+    Password:
+      required: true
+      description: Famis/360facility password
+    Url:
+      required: true
+      description: Url to the Famis/360facility environment
+      sample: 'https://mycompany.famis.com'
+    Endpoint:
+      required: true
+      description: The endpoint to request data from
+      sample: 'MobileWebServices/apis/360facility/v1/workorders'
+    Filter:
+      required: false
+      description: The OData formatted filter to pass when fetching data
+      sample: Id eq 3
+    Select:
+      required: false
+      description: A comma delimited list of the fields you want to fetch
+      sample: Id, StatusId
+    Expand:
+      required: false
+      description: A comma delimited list of the fields to expand
+      sample: Status,AssignedTo
+
+steps:
+  get_record@1.0:
+    inputs:
+      <<: *fetch_inputs
+    outputs:
+      Record:
+        description: The returned record or null if none was found
+      Found:
+        description: A boolean indicating whether a record was found
+  get_records@1.0:
+    inputs:
+      <<: *fetch_inputs
+      Skip:
+        required: false
+        description: The offset to start fetching data from
+      Top:
+        required: false
+        description: The number of total records to fetch
+    outputs:
+      Records:
+        description: The returned records
+      Count:
+        description: The number of records returned
+  get_records_and_queue@1.0:
+    inputs:
+      <<: *fetch_inputs
+      Skip:
+        required: false
+        description: The offset to start fetching data from
+      Top:
+        required: false
+        description: The number of total records to fetch
+      Workflow:
+        required: true
+        description: The workflow to queue for each record returned. Each record will be placed in the ${trigger.body} of the executed workflow
+    outputs: {}
