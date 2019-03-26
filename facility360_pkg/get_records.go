@@ -136,7 +136,7 @@ func (fetch Fetch) buildRequest(method, url string, body io.Reader) (*http.Reque
 }
 
 func (fetch Fetch) buildUrl(input FetchInput) (*url.URL, error) {
-	uri, err := getUrl(input.Url, input.Endpoint)
+	uri, err := fetch.getUrl(input.Url, input.Endpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func (fetch *Fetch) LogMeIn() error {
 
 func (fetch Fetch) Login(username, password, baseUrl string) (AuthItem, error) {
 	// validate and get login url
-	loginUrl, err := getUrl(baseUrl, loginEndpoint)
+	loginUrl, err := fetch.getUrl(baseUrl, loginEndpoint)
 	if err != nil {
 		return AuthItem{}, err
 	}
@@ -282,7 +282,7 @@ func getContents(data JsonMap) ([]byte, error) {
 	return json.Marshal(data)
 }
 
-func getUrl(base, endpoint string) (*url.URL, error) {
+func (fetch Fetch) getUrl(base, endpoint string) (*url.URL, error) {
 	urlVal, err := url.Parse(base)
 	if err != nil {
 		return nil, err
@@ -298,4 +298,39 @@ func (fetch *Fetch) getHttpClient() *http.Client {
 		}
 	}
 	return fetch.client
+}
+
+func (fetch Fetch) handleFailedResponse(resp *http.Response) (interface{}, error) {
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return string(data), nil
+}
+
+func (fetch *Fetch) LogMeInFacility360(facility Facility360Input) error {
+	// set required inputs for the fetcher
+	fetch.username = facility.Username
+	fetch.password = facility.Password
+	fetch.url = facility.Url
+
+	// get authenticated
+	err := fetch.LogMeIn()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (fetch Fetch) handleUpsertResponse(resp *http.Response) (JsonMap, error) {
+	data := make(JsonMap, 0)
+	contents, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
