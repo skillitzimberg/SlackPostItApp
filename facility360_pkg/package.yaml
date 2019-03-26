@@ -10,6 +10,38 @@ executables:
   windows:
     amd64: main_windows_amd64.exe
 
+
+
+upsert_inputs: &upsert_inputs
+  Username:
+    required: true
+    description: 360facility/FAMIS username
+  Password:
+    required: true
+    description: 360facility/FAMIS password
+  Url:
+    required: true
+    description: 360facility/FAMIS environment url
+    sample: https://mycompany.famis.com
+  Endpoint:
+    required: true
+    description: The endpoint to fetch records from
+    sample: 'MobileWebServices/apis/360facility/v1/spaces'
+  Record:
+    required: true
+    description: The json record you wish to create or update
+
+
+upsert_outputs: &upsert_outputs
+  Success:
+    description: was the create or update successful
+  Message:
+    description: the message returned from the create or update call
+  Record:
+    descripton: the outputted record that you created or updated
+
+
+
 fetch_records: &fetch_records
   Username:
     required: true
@@ -74,3 +106,16 @@ steps:
         required: true
         description: The workflow trigger for each returned record.
     outputs: {}
+  create_record@1.0:
+    inputs:
+      <<: *upsert_inputs
+    outputs:
+      <<: *upsert_outputs
+  update_reccord@1.0:
+    inputs:
+      <<: *upsert_inputs
+      Id:
+        required: true
+        description: the id of the record you wish to update
+    outputs:
+      <<: *upsert_outputs
