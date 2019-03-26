@@ -300,12 +300,16 @@ func (fetch *Fetch) getHttpClient() *http.Client {
 	return fetch.client
 }
 
-func (fetch Fetch) handleFailedResponse(resp *http.Response) (interface{}, error) {
+func (fetch Fetch) handleFailedResponse(resp *http.Response) (*Facility360UpsertOut, error) {
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return string(data), nil
+	return &Facility360UpsertOut{
+		Success: false,
+		Message: string(data),
+		Record:  nil,
+	}, nil
 }
 
 func (fetch *Fetch) LogMeInFacility360(facility Facility360Input) error {
@@ -322,7 +326,7 @@ func (fetch *Fetch) LogMeInFacility360(facility Facility360Input) error {
 	return nil
 }
 
-func (fetch Fetch) handleUpsertResponse(resp *http.Response) (JsonMap, error) {
+func (fetch Fetch) handleUpsertResponse(resp *http.Response) (*Facility360UpsertOut, error) {
 	data := make(JsonMap, 0)
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -332,5 +336,10 @@ func (fetch Fetch) handleUpsertResponse(resp *http.Response) (JsonMap, error) {
 	if err != nil {
 		return nil, err
 	}
-	return data, nil
+
+	return &Facility360UpsertOut{
+		Success: true,
+		Message: "",
+		Record:  data,
+	}, nil
 }

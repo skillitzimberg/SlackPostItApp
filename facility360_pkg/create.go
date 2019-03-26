@@ -68,9 +68,12 @@ func (create CreateRecord) execute(input *Facility360CreateIn) (interface{}, err
 	if err != nil {
 		return nil, err
 	} else if resp.StatusCode != 200 {
+		// if status code is not 200
+		// read body as string and return
 		return create.handleFailedResponse(resp)
 	}
 	defer resp.Body.Close()
+
 	return create.handleUpsertResponse(resp)
 }
 
