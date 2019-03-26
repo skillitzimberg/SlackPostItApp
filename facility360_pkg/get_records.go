@@ -317,13 +317,7 @@ func (fetch *Fetch) LogMeInFacility360(facility Facility360Input) error {
 	fetch.username = facility.Username
 	fetch.password = facility.Password
 	fetch.url = facility.Url
-
-	// get authenticated
-	err := fetch.LogMeIn()
-	if err != nil {
-		return err
-	}
-	return nil
+	return fetch.LogMeIn()
 }
 
 func (fetch Fetch) handleUpsertResponse(resp *http.Response) (Facility360UpsertOut, error) {
