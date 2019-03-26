@@ -46,25 +46,20 @@ func (update UpdateRecord) execute(input *Facility360UpdateIn) (interface{}, err
 	if err != nil {
 		return nil, err
 	}
-
 	updateUrl, err := update.getUrl(input.Url, input.Endpoint)
 	// add update key to url
 	updateUrl = update.addKeyToUrl(updateUrl, input.Id)
 	if err != nil {
 		return nil, err
 	}
-
 	data, err := update.getRecordData(input)
 	if err != nil {
 		return nil, err
 	}
-
 	req, err := update.buildRequest(updateRequestMethod, updateUrl.String(), bytes.NewReader(data))
-
 	if err != nil {
 		return nil, err
 	}
-
 	resp, err := update.getHttpClient().Do(req)
 	if err != nil {
 		return nil, err
@@ -72,7 +67,6 @@ func (update UpdateRecord) execute(input *Facility360UpdateIn) (interface{}, err
 		return update.handleFailedResponse(resp)
 	}
 	defer resp.Body.Close()
-
 	return update.handleUpsertResponse(resp)
 }
 
