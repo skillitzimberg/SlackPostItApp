@@ -42,32 +42,29 @@ func (update UpdateRecord) Execute(in step.Context) (interface{}, error) {
 }
 
 func (update UpdateRecord) execute(input *Facility360UpdateIn) (interface{}, error) {
-	// get authenticated
 	err := update.LogMeInFacility360(input.Facility360Input)
 	if err != nil {
 		return nil, err
 	}
 
-	// we have our create url
 	updateUrl, err := update.getUrl(input.Url, input.Endpoint)
+	// add update key to url
 	updateUrl = update.addKeyToUrl(updateUrl, input.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	// get record bytes
 	data, err := update.getRecordData(input)
 	if err != nil {
 		return nil, err
 	}
 
-	// build http request
 	req, err := update.buildRequest(updateRequestMethod, updateUrl.String(), bytes.NewReader(data))
 
 	if err != nil {
 		return nil, err
 	}
-	// send request
+
 	resp, err := update.getHttpClient().Do(req)
 	if err != nil {
 		return nil, err

@@ -45,25 +45,21 @@ func (create CreateRecord) execute(input *Facility360CreateIn) (interface{}, err
 		return nil, err
 	}
 
-	// we have our create url
 	createUrl, err := create.getUrl(input.Url, input.Endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	// get record bytes
 	data, err := create.getRecordData(input)
 	if err != nil {
 		return nil, err
 	}
 
-	// build http request
 	req, err := create.buildRequest(createRequestMethod, createUrl.String(), bytes.NewReader(data))
-
 	if err != nil {
 		return nil, err
 	}
-	// send request
+
 	resp, err := create.getHttpClient().Do(req)
 	if err != nil {
 		return nil, err
@@ -73,7 +69,6 @@ func (create CreateRecord) execute(input *Facility360CreateIn) (interface{}, err
 		return create.handleFailedResponse(resp)
 	}
 	defer resp.Body.Close()
-
 	return create.handleUpsertResponse(resp)
 }
 
