@@ -17,9 +17,17 @@ steps:
       Script:
         required: true
         description: "the script you'd like to run written in java script"
+        sample: |
+          function callMethod(data) {
+            return data * 1.5;
+          }
+
+          var output = callMethod(multiplier);
+          return output;
       ScriptVars:
         required: true
         description: "a map of values you'd like to make available as variables in your script"
+        sample: "{\"multiplier\": 32}"
     outputs:
       ReturnValue:
         description: "The value returned from your script"
