@@ -43,7 +43,7 @@ build-webhook: |
 publish-webhook: build-webhook |
 	apptree workflow package publish -d webhook_pkg --host ${HOST}
 build-oracle: |
-	cd database/oracle_pkg && env CC=x86_64-w64-mingw32-gcc && gox -osarch="windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
+	cd database/oracle_pkg && env CC=x86_64-w64-mingw32-gcc gox -osarch="windows/amd64" -ldflags="-s -w" -output "main_windows_amd64"
 publish-oracle: build-oracle |
 	apptree workflow package publish -d database/oracle_pkg --host ${HOST}
 build-facility360:

@@ -305,9 +305,20 @@ func (fetch Fetch) handleFailedResponse(resp *http.Response) (Facility360UpsertO
 	if err != nil {
 		return Facility360UpsertOut{}, err
 	}
+
+	mapResp := map[string]interface{}{}
+	err = json.Unmarshal(data, &mapResp)
+	if err != nil {
+		return Facility360UpsertOut{
+			Success: false,
+			Message: string(data),
+			Record:  nil,
+		}, nil
+	}
+
 	return Facility360UpsertOut{
 		Success: false,
-		Message: string(data),
+		Message: mapResp["Message"].(string),
 		Record:  nil,
 	}, nil
 }

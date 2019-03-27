@@ -43,6 +43,11 @@ steps:
     outputs:
       Text:
         description: The new string
+  fail_workflow@1.0:
+    inputs:
+      Message:
+        required: true
+        description: The message to display about why the workflow failed
   object_compare@1.0:
     inputs:
       Left:
