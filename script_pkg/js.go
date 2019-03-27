@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 	"github.com/robertkrimen/otto"
 )
 
 type ScriptInput struct {
-	Script string
+	Script     string
 	ScriptVars map[string]interface{}
 }
 
@@ -15,7 +16,6 @@ type ScriptOutput struct {
 }
 
 type JavascriptRunner struct {
-
 }
 
 func (JavascriptRunner) Name() string {
@@ -26,25 +26,33 @@ func (JavascriptRunner) Version() string {
 	return "1.0"
 }
 
-func (JavascriptRunner) Execute(ctx step.Context) (interface{}, error) {
+func (j JavascriptRunner) Execute(ctx step.Context) (interface{}, error) {
 	input := ScriptInput{}
 	err := ctx.BindInputs(&input)
 	if err != nil {
 		return nil, err
 	}
 
+	return j.execute(input)
+}
+
+func (JavascriptRunner) execute(input ScriptInput) (ScriptOutput, error) {
 	vm := otto.New()
 
 	for key, value := range input.ScriptVars {
-		err = vm.Set(key, value)
+		err := vm.Set(key, value)
 		if err != nil {
-			return nil, err
+			return ScriptOutput{}, err
 		}
 	}
 
-	val, err := vm.Run(input.Script)
+	jsScript := fmt.Sprintf(`(function() {
+	%s
+})()`, input.Script)
+
+	val, err := vm.Run(jsScript)
 	if err != nil {
-		return nil, err
+		return ScriptOutput{}, err
 	}
 	var returnVal interface{}
 	if val.IsDefined() {
@@ -63,5 +71,3 @@ func (JavascriptRunner) Execute(ctx step.Context) (interface{}, error) {
 	}
 	return ScriptOutput{ReturnVal: returnVal}, err
 }
-
-
