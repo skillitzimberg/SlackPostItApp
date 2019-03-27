@@ -4,12 +4,16 @@ test: |
 	echo ${HOST}
 all: publish
 build: build-dotnet build-go |
-build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger build-webhook build-cache build-facility360
+build-go: build-filesystem build-postgres build-googlesheets build-convert build-common build-logger build-webhook build-cache build-facility360 build-script
 build-dotnet: build-famis
 build-postgres: |
 			cd database/postgres_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-postgres: build-postgres |
 	apptree workflow package publish -d database/postgres_pkg --host ${HOST}
+build-script: |
+	cd script_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
+publish-script: build-script |
+	apptree workflow package publish -d script_pkg --host ${HOST}
 build-googlesheets: |
 	cd google_sheets_pkg && gox -osarch="linux/amd64 darwin/amd64 windows/amd64" -ldflags="-s -w" -output "main_{{.OS}}_{{.Arch}}"
 publish-googlesheets: build-googlesheets |
@@ -62,7 +66,8 @@ updatesdk: |
 	cd webhook_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd cache_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd facility360_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
-publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish-logger publish-cache publish-facility360
+	cd script_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
+publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish-logger publish-cache publish-facility360 publish-script
 
 publish-dotnet: publish-famis
 
