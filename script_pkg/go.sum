@@ -1,6 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-github.com/apptreesoftware/go-workflow v0.0.0-20190326200233-de575605cbc5 h1:Tt2/qYluw86dY+wkZ7+j8sNVI7twWntLahJOcrFgO7E=
-github.com/apptreesoftware/go-workflow v0.0.0-20190326200233-de575605cbc5/go.mod h1:YvMhZ1zgHINU4oHpRLD2/FJ5YbvxUxCdzdYBcZjzUYg=
+github.com/apptreesoftware/go-workflow v0.0.0-20190327223655-16afc7ef7929 h1:W0jgBH/9CXmoA6oAQm8boioWfmQ8BHZlW1btaFNIhp8=
+github.com/apptreesoftware/go-workflow v0.0.0-20190327223655-16afc7ef7929/go.mod h1:YvMhZ1zgHINU4oHpRLD2/FJ5YbvxUxCdzdYBcZjzUYg=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -38,12 +38,17 @@ steps:
         description: A list of the files and directories found
   read_lines_and_queue@1.0:
     inputs:
-      FilePath:
+      FilePaths:
         required: true
-        description: The local file path that you would like to parse.
+        description: A list of files to process
+        sample: "['/files/1.txt', 'files/2.txt']"
       Workflow:
         required: true
         description: The workflow that you want to queue up
+      MoveToDirectoryAfterProcessing:
+        required: false
+        description: (Optional) After processing the file, you can provide it a directory to move the file to
+        sample: /files/archive
     outputs: {}
   file_move@1.0:
     inputs:

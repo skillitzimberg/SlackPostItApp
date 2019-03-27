@@ -24,15 +24,15 @@ func (f ListDirectory) Execute(ctx step.Context) (interface{}, error) {
 	return f.execute(input)
 }
 
-func (ListDirectory) execute(input ListDirectoryInput) (*ListDirectoryOutput, error) {
+func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, error) {
 	dir, err := os.Open(input.DirectoryPath)
 	if err != nil {
-		return nil, err
+		return ListDirectoryOutput{}, err
 	}
 	files, err := dir.Readdir(-1)
 	dir.Close()
 	if err != nil {
-		return nil, err
+		return ListDirectoryOutput{}, err
 	}
 
 	var output []string
@@ -40,7 +40,7 @@ func (ListDirectory) execute(input ListDirectoryInput) (*ListDirectoryOutput, er
 		output = append(output, file.Name())
 	}
 
-	return &ListDirectoryOutput{
+	return ListDirectoryOutput{
 		Files: output,
 	}, nil
 }
