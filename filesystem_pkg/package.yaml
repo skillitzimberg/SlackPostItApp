@@ -45,3 +45,14 @@ steps:
         required: true
         description: The workflow that you want to queue up
     outputs: {}
+  file_move@1.0:
+    inputs:
+      FilePath:
+        required: true
+        description: the path including file name of the file that you would like to move
+      ToDirectory:
+        required: true
+        description: where you would like the file moved to, does not include the filename
+      FileName:
+        required: false
+        description: an optional file name that can be specified, if omitted then the file will retain its name
