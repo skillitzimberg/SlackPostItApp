@@ -8,6 +8,7 @@ func main() {
 	step.Register(FetchFile{})
 	step.Register(ListDirectory{})
 	step.Register(ReadLinesAndQueue{})
+	step.Register(FileMove{})
 
 	step.Run()
 }
