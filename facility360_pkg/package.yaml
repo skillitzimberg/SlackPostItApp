@@ -111,7 +111,7 @@ steps:
       <<: *upsert_inputs
     outputs:
       <<: *upsert_outputs
-  update_reccord@1.0:
+  update_record@1.0:
     inputs:
       <<: *upsert_inputs
       Id:
