@@ -53,7 +53,7 @@ func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, err
 		if reg != nil && !reg.MatchString(fileName) {
 			continue
 		}
-		output = append(output, file.Name())
+		output = append(output, filepath.Join(input.DirectoryPath, file.Name()))
 	}
 
 	return ListDirectoryOutput{
