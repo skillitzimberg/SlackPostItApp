@@ -33,6 +33,9 @@ steps:
       DirectoryPath:
         required: true
         description: The local file path that you would like to parse.
+      MatchPattern:
+        description: Only return files matching this pattern
+        required: false
     outputs:
       Files:
         description: A list of the files and directories found

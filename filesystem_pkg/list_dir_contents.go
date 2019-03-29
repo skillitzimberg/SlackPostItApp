@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
 	"os"
+	"path/filepath"
+	"regexp"
 )
 
 type ListDirectory struct{}
@@ -35,8 +38,21 @@ func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, err
 		return ListDirectoryOutput{}, err
 	}
 
+	var reg *regexp.Regexp
+	if len(input.MatchPattern) > 0 {
+		regMatch, err := regexp.Compile(input.MatchPattern)
+		if err != nil {
+			return ListDirectoryOutput{}, fmt.Errorf("Invalid MatchPattern %s", input.MatchPattern)
+		}
+		reg = regMatch
+	}
+
 	var output []string
 	for _, file := range files {
+		_, fileName := filepath.Split(file.Name())
+		if reg != nil && !reg.MatchString(fileName) {
+			continue
+		}
 		output = append(output, file.Name())
 	}
 
@@ -47,6 +63,7 @@ func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, err
 
 type ListDirectoryInput struct {
 	DirectoryPath string
+	MatchPattern  string
 }
 
 type ListDirectoryOutput struct {

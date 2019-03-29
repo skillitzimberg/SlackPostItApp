@@ -67,7 +67,7 @@ updatesdk: |
 	cd cache_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd facility360_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
 	cd script_pkg && go mod tidy && go get github.com/apptreesoftware/go-workflow
-publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish-logger publish-cache publish-facility360 publish-script
+publish-go: publish-common publish-convert publish-postgres publish-googlesheets publish-filesystem publish-logger publish-cache publish-facility360 publish-script publish-webhook
 
 publish-dotnet: publish-famis
 

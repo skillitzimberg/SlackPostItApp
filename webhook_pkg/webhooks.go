@@ -26,7 +26,7 @@ type PostWebhook struct {
 }
 
 func (PostWebhook) Name() string {
-	return "webhook_post"
+	return "post"
 }
 
 func (PostWebhook) Description() string {
@@ -52,7 +52,7 @@ type GetWebhook struct {
 }
 
 func (GetWebhook) Name() string {
-	return "webhook_get"
+	return "get"
 }
 
 func (GetWebhook) Description() string {
