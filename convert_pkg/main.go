@@ -11,6 +11,7 @@ func main() {
 	step.Register(ExtractFields{})
 	step.Register(ParseLine{})
 	step.Register(DateFormat{})
+	step.Register(QueueChildren{})
 
 	step.Run()
 }
