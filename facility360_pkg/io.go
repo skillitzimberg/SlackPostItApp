@@ -56,7 +56,8 @@ type FetchListOutputs struct {
 
 type FetchAndQueueInput struct {
 	FetchInput
-	Workflow string
+	ChildPath string
+	Workflow  string
 }
 
 type PagedResponse interface {

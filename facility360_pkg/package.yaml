@@ -102,6 +102,9 @@ steps:
     inputs:
       <<: *fetch_records
       <<: *skip_top_inputs
+      ChildPath:
+        required: false
+        description: the path to find sub records at if queueing child item(s)
       Workflow:
         required: true
         description: The workflow trigger for each returned record.
