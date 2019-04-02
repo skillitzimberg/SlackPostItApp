@@ -25,7 +25,6 @@ func (QueueChildren) Version() string {
 
 func (QueueChildren) Execute(ctx step.Context) (interface{}, error) {
 	var input QueueChildrenInput
-	println("found inputs")
 	err := ctx.BindInputs(&input)
 	if err != nil {
 		return nil, err
@@ -37,9 +36,7 @@ func (QueueChildren) Execute(ctx step.Context) (interface{}, error) {
 func execute(input QueueChildrenInput, engine step.Engine) (interface{}, error) {
 	child := input.Record[input.FieldName]
 	if arrayVal, ok := child.([]interface{}); ok && len(arrayVal) > 0 {
-		println(fmt.Sprintf("%d records found", len(arrayVal)))
 		for _, record := range arrayVal {
-			println("adding to engine")
 			err := engine.AddToQueue(input.Workflow, record)
 			if err != nil {
 				return nil, err
@@ -48,7 +45,6 @@ func execute(input QueueChildrenInput, engine step.Engine) (interface{}, error) 
 		return nil, nil
 	}
 	if singleVal, ok := child.(interface{}); ok && singleVal != nil {
-		println("found single record")
 		err := engine.AddToQueue(input.Workflow, singleVal)
 		if err != nil {
 			return nil, err
