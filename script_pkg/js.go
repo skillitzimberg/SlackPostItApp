@@ -66,7 +66,7 @@ func (JavascriptRunner) execute(input ScriptInput) (ScriptOutput, error) {
 		} else if val.IsString() {
 			returnVal, err = val.ToString()
 		} else if val.IsObject() {
-			returnVal = val.Object()
+			returnVal, _ = val.Export()
 		}
 	}
 	return ScriptOutput{ReturnVal: returnVal}, err
