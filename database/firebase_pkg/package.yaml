@@ -13,7 +13,7 @@ executables:
 firebase_inputs: &firebase_inputs
   StorageBucket:
     required: true
-    description: "the storage bucket for firesbase"
+    description: "the storage bucket for firebase"
   AuthOverrides:
     required: false
     description: "optional auth overrides to use"
@@ -39,7 +39,7 @@ steps:
       QueryParameters:
         required: false
         description: "a list of query parameters which contain a fieldName, operator, and field value which will be used to build your query. if omitted then all records will be returned"
-        sample: [{"fieldName": "myField", "operator": "==", "fieldValue": "mySearchVal"},{"fieldName": "myField2", "operator": "<=", "fieldValue": 2}]
+        sample: '[{"fieldName": "myField", "operator": "==", "fieldValue": "mySearchVal"},{"fieldName": "myField2", "operator": "<=", "fieldValue": 2}]'
     outputs:
       Records:
         description: "The records returned from the query."
@@ -50,7 +50,7 @@ steps:
       QueryParameters:
         required: false
         description: "a list of query parameters which contain a fieldName, operator, and field value which will be used to build your query. if omitted then all records will be returned"
-        sample: [{"fieldName": "myField", "operator": "==", "fieldValue": "mySearchVal"},{"fieldName": "myField2", "operator": "<=", "fieldValue": 2}]
+        sample: '[{"fieldName": "myField", "operator": "==", "fieldValue": "mySearchVal"},{"fieldName": "myField2", "operator": "<=", "fieldValue": 2}]'
       Workflow:
         required: true
         description: "the workflow to queue the records to"
@@ -64,7 +64,7 @@ steps:
       QueryParameters:
         required: false
         description: "a list of query parameters which contain a fieldName, operator, and field value which will be used to build your query. if omitted then all records will be returned"
-        sample: [{"fieldName": "myField", "operator": "==", "fieldValue": "mySearchVal"},{"fieldName": "myField2", "operator": "<=", "fieldValue": 2}]
+        sample: '[{"fieldName": "myField", "operator": "==", "fieldValue": "mySearchVal"},{"fieldName": "myField2", "operator": "<=", "fieldValue": 2}]'
       UpdateFields:
         required: true
         description: "a key value map to update on each record"
