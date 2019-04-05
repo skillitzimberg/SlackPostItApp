@@ -9,7 +9,6 @@ require (
 	github.com/golang/mock v1.2.0 // indirect
 	github.com/google/martian v2.1.0+incompatible // indirect
 	github.com/googleapis/gax-go v2.0.2+incompatible // indirect
-	github.com/json-iterator/go v1.1.5
 	github.com/kr/pretty v0.1.0 // indirect
 	go.opencensus.io v0.20.0 // indirect
 	google.golang.org/api v0.3.0
