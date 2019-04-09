@@ -36,6 +36,16 @@ steps:
       Sql:
         required: true
         description: ""
+  mock_execute@1.0:
+    description: "Accepts a list of records and inserts them into a database."
+    inputs:
+      ConnectionString:
+        required: true
+        sample: "postgres://user:passw@localhost:5432"
+        description: "Postgres Connection string"
+      Sql:
+        required: true
+        description: ""
   query@1.0:
     description: "Performs a SELECT query"
     inputs:

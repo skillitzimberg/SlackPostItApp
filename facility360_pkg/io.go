@@ -9,6 +9,29 @@ import (
 	"time"
 )
 
+type Facility360Input struct {
+	Username string
+	Password string
+	Url      string
+	Endpoint string
+}
+
+type Facility360CreateIn struct {
+	Facility360Input
+	Record JsonMap
+}
+
+type Facility360UpdateIn struct {
+	Facility360CreateIn
+	Id int
+}
+
+type Facility360UpsertOut struct {
+	Success bool
+	Message string
+	Record  JsonMap
+}
+
 type FetchInput struct {
 	Username string
 	Password string
@@ -33,7 +56,8 @@ type FetchListOutputs struct {
 
 type FetchAndQueueInput struct {
 	FetchInput
-	Workflow string
+	ChildPath string
+	Workflow  string
 }
 
 type PagedResponse interface {
@@ -131,3 +155,11 @@ func (i AuthItem) GetExpiration() (time.Time, error) {
 }
 
 type JsonMap map[string]interface{}
+
+func (mp *JsonMap) String() string {
+	data, err := jsoniter.Marshal(mp)
+	if err != nil {
+		return ""
+	}
+	return string(data)
+}

@@ -9,5 +9,7 @@ func main() {
 	step.Register(StringLengthCounter{})
 	step.Register(SliceString{})
 	step.Register(ObjectCompare{})
+	step.Register(FailWorkflow{})
+	step.Register(Sleep{})
 	step.Run()
 }

@@ -98,6 +98,11 @@ func (fetch Fetch) performPagedFetch(uri *url.URL, endpoint string, handler Page
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode == 404 {
+		return fmt.Errorf("The service responded with a status code of %d. Verify that your Url and Endpoint inputs are correct.", resp.StatusCode)
+	} else if resp.StatusCode != 200 {
+		return fmt.Errorf("The service responded with a status code of %d.", resp.StatusCode)
+	}
 	defer resp.Body.Close()
 
 	var parsedResp PagedResponse
@@ -131,7 +136,7 @@ func (fetch Fetch) buildRequest(method, url string, body io.Reader) (*http.Reque
 }
 
 func (fetch Fetch) buildUrl(input FetchInput) (*url.URL, error) {
-	uri, err := getUrl(input.Url, input.Endpoint)
+	uri, err := fetch.getUrl(input.Url, input.Endpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +172,7 @@ func (fetch *Fetch) LogMeIn() error {
 
 func (fetch Fetch) Login(username, password, baseUrl string) (AuthItem, error) {
 	// validate and get login url
-	loginUrl, err := getUrl(baseUrl, loginEndpoint)
+	loginUrl, err := fetch.getUrl(baseUrl, loginEndpoint)
 	if err != nil {
 		return AuthItem{}, err
 	}
@@ -277,7 +282,7 @@ func getContents(data JsonMap) ([]byte, error) {
 	return json.Marshal(data)
 }
 
-func getUrl(base, endpoint string) (*url.URL, error) {
+func (fetch Fetch) getUrl(base, endpoint string) (*url.URL, error) {
 	urlVal, err := url.Parse(base)
 	if err != nil {
 		return nil, err
@@ -293,4 +298,53 @@ func (fetch *Fetch) getHttpClient() *http.Client {
 		}
 	}
 	return fetch.client
+}
+
+func (fetch Fetch) handleFailedResponse(resp *http.Response) (Facility360UpsertOut, error) {
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return Facility360UpsertOut{}, err
+	}
+
+	mapResp := map[string]interface{}{}
+	err = json.Unmarshal(data, &mapResp)
+	if err != nil {
+		return Facility360UpsertOut{
+			Success: false,
+			Message: string(data),
+			Record:  nil,
+		}, nil
+	}
+
+	return Facility360UpsertOut{
+		Success: false,
+		Message: mapResp["Message"].(string),
+		Record:  nil,
+	}, nil
+}
+
+func (fetch *Fetch) LogMeInFacility360(facility Facility360Input) error {
+	// set required inputs for the fetcher
+	fetch.username = facility.Username
+	fetch.password = facility.Password
+	fetch.url = facility.Url
+	return fetch.LogMeIn()
+}
+
+func (fetch Fetch) handleUpsertResponse(resp *http.Response) (Facility360UpsertOut, error) {
+	data := make(JsonMap, 0)
+	contents, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return Facility360UpsertOut{}, err
+	}
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		return Facility360UpsertOut{}, err
+	}
+
+	return Facility360UpsertOut{
+		Success: true,
+		Message: "",
+		Record:  data,
+	}, nil
 }

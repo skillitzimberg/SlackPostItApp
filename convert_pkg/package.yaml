@@ -9,6 +9,17 @@ executables:
   windows:
     amd64: main_windows_amd64.exe
 steps:
+  queue_children@1.0:
+    inputs:
+      Record:
+        required: true
+        description: the parent record which you would like to extract child value(s) from
+      FieldName:
+        required: true
+        description: the field/path which the sub item(s) can be found at
+      Workflow:
+        required: true
+        description: the workflow to queue with the found records
   parse_json_object@1.0:
     inputs:
       String:

@@ -43,6 +43,11 @@ steps:
     outputs:
       Text:
         description: The new string
+  fail_workflow@1.0:
+    inputs:
+      Message:
+        required: true
+        description: The message to display about why the workflow failed
   object_compare@1.0:
     inputs:
       Left:
@@ -64,4 +69,12 @@ steps:
         description: True if the objects are equal, False if they are not.
       FieldsThatDiffered:
         description: A list of fields that were different between the left & right object
-
+  sleep@1.0:
+    inputs:
+      Seconds:
+        required: false
+        description: Amount of time, in seconds, to sleep for
+      Millis:
+        required: false
+        description: Amount of time, in milliseconds, to sleep for
+    outputs: {}

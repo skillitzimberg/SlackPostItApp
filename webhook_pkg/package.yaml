@@ -1,19 +1,28 @@
 name: webhook
 version: 1.0
 lang: go
-exec: main
-webhook_get@1.0:
-  description: Performs a GET webhook
-  inputs:
-    Url:
-      required: true
-      description: ""
-      sample:
-  outputs:
-    ResponseBody:
-      description: ""
-      sample:
-  webhook_post@1.0:
+
+executables:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
+
+steps:
+  get@1.0:
+    description: Performs a GET webhook
+    inputs:
+      Url:
+        required: true
+        description: ""
+        sample:
+    outputs:
+      ResponseBody:
+        description: ""
+        sample:
+  post@1.0:
     description: Posts a webhook
     inputs:
       Body:
