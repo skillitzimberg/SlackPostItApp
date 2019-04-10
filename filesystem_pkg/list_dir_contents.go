@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
-	"github.com/rs/zerolog/log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -56,13 +55,9 @@ func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, err
 		}
 
 		if !input.Relative {
-			absolutePath, err := filepath.Abs(file.Name())
-			if err != nil {
-				log.Error().Err(err)
-			}
-			output = append(output, filepath.Join(absolutePath))
-		} else {
 			output = append(output, filepath.Join(input.DirectoryPath, file.Name()))
+		} else {
+			output = append(output, file.Name())
 		}
 	}
 
