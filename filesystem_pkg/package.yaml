@@ -36,6 +36,9 @@ steps:
       MatchPattern:
         description: Only return files matching this pattern
         required: false
+      Relative:
+        description: Should the output files include the full path or relative path?
+        required: false
     outputs:
       Files:
         description: A list of the files and directories found

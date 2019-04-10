@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
+	"github.com/rs/zerolog/log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -53,7 +54,16 @@ func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, err
 		if reg != nil && !reg.MatchString(fileName) {
 			continue
 		}
-		output = append(output, filepath.Join(input.DirectoryPath, file.Name()))
+
+		if !input.Relative {
+			absolutePath, err := filepath.Abs(file.Name())
+			if err != nil {
+				log.Error().Err(err)
+			}
+			output = append(output, filepath.Join(absolutePath))
+		} else {
+			output = append(output, filepath.Join(input.DirectoryPath, file.Name()))
+		}
 	}
 
 	return ListDirectoryOutput{
@@ -64,6 +74,7 @@ func (ListDirectory) execute(input ListDirectoryInput) (ListDirectoryOutput, err
 type ListDirectoryInput struct {
 	DirectoryPath string
 	MatchPattern  string
+	Relative      bool
 }
 
 type ListDirectoryOutput struct {
