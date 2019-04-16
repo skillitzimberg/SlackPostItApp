@@ -157,7 +157,9 @@ var xmlComplete = `<?xml version="1.0" encoding="utf-8"?>
         <wsse:Security env:mustUnderstand="1">
             <wsse:UsernameToken>
                 <wsse:Username>GT_ISU_AppTree@gatech3</wsse:Username>
-                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">Workday2019!</wsse:Password>
+                <wsse:Password Type="http://docs.oasis-open.
+org/wss/2004/01/oasis-200401-wss-username-token-profile-1.
+0#PasswordText">Password</wsse:Password>
             </wsse:UsernameToken>
         </wsse:Security>
     </env:Header>
@@ -232,3 +234,53 @@ var xmlComplete = `<?xml version="1.0" encoding="utf-8"?>
     </env:Body>
 </env:Envelope>
 `
+
+func TestSlackMessage(t *testing.T) {
+
+	expectedOutput := `{
+			"type" : "mrkdwn",
+			"text" : "*VM (Vicky) Brasseur—   Open Source: What even is? How even to?*\n Portland JR DEVELOPER Meetup!\n https://www.meetup.com/Portland-JR-DEVELOPER-Meetup/events/256869518/\n 2019-04-17\n 17:30\n *Vacasa*\n 926 NW 13th Ave\n Portland, OR "
+		}`
+
+	template := `{
+			"type" : "mrkdwn",
+			"text" : "*{{.Name}}*\n {{.Group.Name}}\n {{.Link}}\n {{.Date}}\n {{.Time}}\n *{{.Venue.Name}}*\n {{.Venue.Address}}\n {{.Venue.City}}, {{.Venue.State}} {{.Venue.Zip}}"
+		}`
+
+
+
+	event := Json{
+		"Name": "VM (Vicky) Brasseur—   Open Source: What even is? How even to?",
+		"Group": Json{
+			"Name": "Portland JR DEVELOPER Meetup!",
+		},
+		"Link": "https://www.meetup.com/Portland-JR-DEVELOPER-Meetup/events/256869518/",
+		"Date": "2019-04-17",
+		"Time": "17:30",
+		"Venue": Json{
+			"Name": "Vacasa",
+			"Address": "926 NW 13th Ave",
+			"City": "Portland",
+			"State": "OR",
+			"Zip": "",
+		},
+	}
+
+	output, err := Template{}.execute(TemplateInput{
+		Template: template,
+		Record:   event,
+	})
+	if err != nil {
+		t.Error(err.Error())
+		return
+	}
+
+	if output.Output != expectedOutput {
+		t.Logf("Outputs do not match: expected: \n%s; got: \n\n%s",
+			expectedOutput, output.Output)
+		t.Fail()
+	}
+
+}
+
+type Json map[string]interface{}
