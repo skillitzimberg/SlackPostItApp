@@ -5,7 +5,7 @@ go 1.12
 require (
 	cloud.google.com/go v0.34.0
 	firebase.google.com/go v3.7.0+incompatible
-	github.com/apptreesoftware/go-workflow v0.0.0-20190327223655-16afc7ef7929
+	github.com/apptreesoftware/go-workflow v0.0.0-20190417191803-3da7584c654b
 	github.com/golang/mock v1.2.0 // indirect
 	github.com/google/martian v2.1.0+incompatible // indirect
 	github.com/googleapis/gax-go v2.0.2+incompatible // indirect
