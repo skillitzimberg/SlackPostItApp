@@ -43,6 +43,18 @@ steps:
     outputs:
       Text:
         description: The new string
+  template@1.0:
+    inputs:
+      Records:
+        required: true
+        description: The list of records you would like mapped to a template
+      Template:
+        required: true
+        description: The template you want to use
+        sample: "My name is {{.Name}}. I am {{.Age}} years old. I live at {{.Address}}"
+    output:
+      TemplatedString:
+        description: Your data mapped to your template
   fail_workflow@1.0:
     inputs:
       Message:

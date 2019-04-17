@@ -249,15 +249,15 @@ func TestSlackMessage(t *testing.T) {
 
 
 
-	event := Json{
+	event := map[string]interface{}{
 		"Name": "VM (Vicky) Brasseur—   Open Source: What even is? How even to?",
-		"Group": Json{
+		"Group": map[string]interface{}{
 			"Name": "Portland JR DEVELOPER Meetup!",
 		},
 		"Link": "https://www.meetup.com/Portland-JR-DEVELOPER-Meetup/events/256869518/",
 		"Date": "2019-04-17",
 		"Time": "17:30",
-		"Venue": Json{
+		"Venue": map[string]interface{}{
 			"Name": "Vacasa",
 			"Address": "926 NW 13th Ave",
 			"City": "Portland",
@@ -282,5 +282,3 @@ func TestSlackMessage(t *testing.T) {
 	}
 
 }
-
-type Json map[string]interface{}

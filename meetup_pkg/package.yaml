@@ -1,0 +1,60 @@
+#step meta data
+name: meetup_pkg
+version: 1.0
+runtime: go
+
+# executables - at least one
+executables:
+  linux:
+    amd64: main_linux_amd64
+  darwin:
+    amd64: main_darwin_amd64
+  windows:
+    amd64: main_windows_amd64.exe
+#steps
+steps:
+  fetchMeetup@1.0:
+    description: Get upcoming meetups.
+    inputs:
+      TopicCategory:
+        required: true
+        description: "Type or topic of meetup."
+        sample: "developer, code, hack, coding"
+      EndDate:
+        required: true
+        description: "The last day of events to request in the format: YYYY-MM-DDTHH:MM:SS."
+        sample: "2019-04-29T22:00:00"
+      Radius:
+        required: false
+        description: "The distance radius you're willing to travel."
+        sample: "10"
+      Lat:
+        required: false
+        description: "Latitude of the center of the distance circle."
+        sample: "45.531577"
+      Lon:
+        required: false
+        description: "Longitude of the center of the distance circle."
+        sample: "-122.680746"
+      Page:
+        required: true
+        description: "The number of pages of JSON you want to get back."
+        sample: "20"
+    outputs:
+      Data:
+        description: "A JSON object of Meetup information."
+
+
+# RUNNING & TESTING THE STEP:
+# STEP_NAME=fetchMeetup STEP_VERSION=1.0 go run meetup_pkg/
+
+# {
+#   "Lon": "-122.680746",
+#   "EndDate": "2019-04-13T22:00:00",
+#   "TopicCategory": "tech,code,developer,coding,hack",
+#   "Page": "1",
+#   "Radius": "10",
+#   "Lat": "45.531577"
+# }
+
+# env GOOS=darwin GOARCH=amd64 go build /Users/scott/apptree/meetup_pkg
