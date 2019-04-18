@@ -52,7 +52,7 @@ steps:
         required: true
         description: The template you want to use
         sample: "My name is {{.Name}}. I am {{.Age}} years old. I live at {{.Address}}"
-    output:
+    outputs:
       TemplatedString:
         description: Your data mapped to your template
   fail_workflow@1.0:

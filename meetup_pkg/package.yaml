@@ -16,6 +16,10 @@ steps:
   fetchMeetup@1.0:
     description: Get upcoming meetups.
     inputs:
+      ApiKey:
+        required: true
+        description: The value of the project variable; use ${getProjectValue(“key”)} in workflow.yaml
+        sample: ${getProjectValue(“MEETUP_KEY”)}
       TopicCategory:
         required: true
         description: "Type or topic of meetup."
@@ -56,5 +60,3 @@ steps:
 #   "Radius": "10",
 #   "Lat": "45.531577"
 # }
-
-# env GOOS=darwin GOARCH=amd64 go build /Users/scott/apptree/meetup_pkg

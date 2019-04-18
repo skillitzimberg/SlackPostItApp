@@ -7,7 +7,6 @@ import (
 	"github.com/json-iterator/go"
 	"log"
 	"net/http"
-	"os"
 )
 
 func init() {
@@ -30,6 +29,7 @@ func (f FetchMeetup) Version() string {
 }
 
 type FetchMeetupInput struct {
+	ApiKey string
 	TopicCategory string
 	EndDate string
 	Radius string
@@ -56,21 +56,18 @@ func (f FetchMeetup) Execute(in step.Context) (interface{}, error) {
 		log.Fatal(err, "Execute: ")
 		return nil, err
 	}
+
+	fmt.Println(output)
 	return output, nil
 }
 
 func (f FetchMeetup) execute(input FetchMeetupInput) (
 	*FetchMeetupOutput, error) {
-
-	meetup_key, exists := os.LookupEnv("MEETUP_KEY")
-	if !exists {
-		fmt.Println("No environment variable found.")
-	}
-
+		fmt.Println(input.ApiKey)
 	requestUrl := fmt.Sprintf("https://api.meetup." +
 		"com/find/upcoming_events?&key=%s&lon=%s" +
 		"&end_date=%s&topic_category=%s&page=%s&radius=%s&lat=%s",
-		meetup_key, input.Lon, input.EndDate, input.TopicCategory,
+		input.ApiKey, input.Lon, input.EndDate, input.TopicCategory,
 		input.Page, input.Radius, input.Lat)
 	response, err := http.Get(requestUrl)
 	if err != nil {
