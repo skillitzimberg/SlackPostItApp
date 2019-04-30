@@ -28,6 +28,7 @@ func (ParseLine) Execute(in step.Context) (interface{}, error) {
 
 	components := strings.Split(input.String, input.Delimiter)
 	record := map[string]interface{}{}
+
 	for k, v := range input.StringFields {
 		if len(components) <= v {
 			continue

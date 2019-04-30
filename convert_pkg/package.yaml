@@ -93,6 +93,54 @@ steps:
     outputs:
       Record:
         description: An object containing the parsed fields
+  targeted_line_parse@1.0:
+    inputs:
+      String:
+        required: true
+        description: The line of text you want to parse
+        sample: "a+b+c+d+e+f+g"
+      Delimiter:
+        required: true
+        description: Delimiter used to separate the fields
+        sample: "+"
+      Indices:
+        required: true
+        description: the number indices you want returned.
+        sample: To return [a, b, c+d+e+f+g], Indices is 3.
+      StringFields:
+        required: false
+        description: A list of fields to parse as a string. The field name you want to parse out should be on the left, the index of the field on the right
+        sample: |
+          FieldA: 1
+          FieldB: 2
+      IntFields:
+        required: false
+        description: A list of fields to parse as an int. The field name you want to parse out should be on the left, the index of the field on the right
+        sample: |
+          FieldA: 1
+          FieldB: 2
+      FloatFields:
+        required: false
+        description: A list of fields to parse as an float. The field name you want to parse out should be on the left, the index of the field on the right
+        sample: |
+          FieldA: 1
+          FieldB: 2
+    outputs:
+      Record:
+        description: An object containing the parsed fields
+  parse_build_string@1.0:
+    inputs:
+      String:
+        required: true
+        description: The line of text you want to parse
+        sample: "post+todo+say+hi"
+      Delimiter:
+        required: true
+        description: Delimiter used to separate the fields
+        sample: "+"
+    outputs:
+      Record:
+        description: A string with spaces where the delimiter was.
   date_format@1.0:
     inputs:
       Date:

@@ -12,6 +12,8 @@ func main() {
 	step.Register(ParseLine{})
 	step.Register(DateFormat{})
 	step.Register(QueueChildren{})
+	step.Register(TargetedParseLine{})
+	step.Register(ParseBuildString{})
 
 	step.Run()
 }
