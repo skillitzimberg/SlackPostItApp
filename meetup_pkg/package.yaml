@@ -21,11 +21,11 @@ steps:
         description: The value of the project variable; use ${getProjectValue(“key”)} in workflow.yaml
         sample: ${getProjectValue(“MEETUP_KEY”)}
       TopicCategory:
-        required: true
+        required: false
         description: "Type or topic of meetup."
         sample: "developer, code, hack, coding"
       EndDate:
-        required: true
+        required: false
         description: "The last day of events to request in the format: YYYY-MM-DDTHH:MM:SS."
         sample: "2019-04-29T22:00:00"
       Radius:

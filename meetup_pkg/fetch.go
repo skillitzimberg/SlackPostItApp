@@ -63,7 +63,6 @@ func (f FetchMeetup) Execute(in step.Context) (interface{}, error) {
 
 func (f FetchMeetup) execute(input FetchMeetupInput) (
 	*FetchMeetupOutput, error) {
-		fmt.Println(input.ApiKey)
 	requestUrl := fmt.Sprintf("https://api.meetup." +
 		"com/find/upcoming_events?&key=%s&lon=%s" +
 		"&end_date=%s&topic_category=%s&page=%s&radius=%s&lat=%s",
