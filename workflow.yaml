@@ -1,0 +1,110 @@
+#package_overrides:
+#  convert:
+#    host: localhost:4000
+workflows:
+  SlackPostIt:
+    triggers:
+      webhook:
+        response: postIts
+        response_content_type: application/json
+    vars:
+#      connectionString: "postgres://postgres:@localhost:5432?sslmode=disable"
+      connectionString: "https://edff5a8a.ngrok.io:5432?sslmode=disable"
+      template : {"type": "mrkdwn","text": "{{range .postItRecords}} (Item {{.id}}) - {{.category}}: {{.note}}\n\n{{end}}"}
+    steps:
+      - convert:parse_line@1.0:
+          debug: true
+          inputs:
+            String: ${trigger.body}
+            Delimiter: "&"
+            StringFields:
+              text: 8
+          outputs:
+            Record: parsedLine
+      - convert:parse_line@1.0:
+          debug: true
+          inputs:
+            String: ${parsedLine.text}
+            Delimiter: "="
+            StringFields:
+              Request: 1
+          outputs:
+            Record: Request
+      - convert:targeted_line_parse@1.0:
+          debug: true
+          inputs:
+            String: ${Request.Request}
+            Delimiter: "+"
+            Indices: 2
+            StringFields:
+              action: 0
+              unparsedSegment: 1
+          outputs:
+            Record: sqlParameters
+      - convert:targeted_line_parse@1.0:
+          run_if: '${sqlParameters.action} == "post"'
+          debug: true
+          inputs:
+            String: ${sqlParameters.unparsedSegment}
+            Delimiter: "+"
+            Indices: 2
+            StringFields:
+              category: 0
+              unparsedNote: 1
+          outputs:
+            Record: categoryNote
+      - convert:parse_build_string@1.0:
+          run_if: '${sqlParameters.action} == "post"'
+          debug: true
+          inputs:
+            String: ${categoryNote.unparsedNote}
+            Delimiter: "+"
+          outputs:
+            NewString: note
+      - postgres:execute@1.0:
+          run_if: '${sqlParameters.action} == "post"'
+          debug: true
+          inputs:
+            ConnectionString: ${connectionString}
+            Sql: "INSERT INTO post_it (category, note) VALUES (\'${categoryNote.category}\', \'${note}\');"
+      - postgres:execute@1.0:
+          run_if: '${sqlParameters.action} == "delete"'
+          debug: true
+          inputs:
+            ConnectionString: ${connectionString}
+            Sql: "DELETE FROM post_it WHERE id = \'${sqlParameters.unparsedSegment}\';"
+      - postgres:query@1.0:
+          run_if: '${sqlParameters.action} == "get"'
+          debug: true
+          inputs:
+            ConnectionString: ${connectionString}
+            Sql: "SELECT * FROM post_it WHERE category = \'${sqlParameters.unparsedSegment}\';"
+          outputs:
+            Results: rawPostIts
+      - convert:set_fields@1.0:
+          run_if: '${sqlParameters.action} == "get"'
+          debug: true
+          inputs:
+            Fields:
+              postItRecords: ${rawPostIts}
+          outputs:
+            Record: postItJson
+      - common:template@1.0:
+          run_if: '${sqlParameters.action} == "get"'
+          debug: true
+          inputs:
+            Record: ${postItJson}
+            Template: ${template.toString()}
+          outputs:
+            Output: templatedPostIts
+      - convert:parse_json_object@1.0:
+          run_if: '${sqlParameters.action} == "get"'
+          debug: true
+          inputs:
+            String: ${templatedPostIts}
+          outputs:
+            Record: postIts
+
+# RUNNING & TESTING THE WORKFLOW:
+# apptree run workflow -f workflows/SlackPostIt/workflow.yaml --id SlackPostIt
+# apptree publish workflow -f workflows/SlackPostIt/workflow.yaml -project surfrating.commandinghands.com
