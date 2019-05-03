@@ -128,6 +128,16 @@ steps:
     outputs:
       Record:
         description: An object containing the parsed fields
+  hash_string@1.0:
+    inputs:
+      String:
+        required: true
+        description: The string to be hashed
+        sample: "hello world"
+    outputs:
+      Hash:
+        description: The input string hashed
+        sample: "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447"
   parse_build_string@1.0:
     inputs:
       String:
@@ -141,6 +151,15 @@ steps:
     outputs:
       Record:
         description: A string with spaces where the delimiter was.
+  parse_bson_object@1.0:
+    inputs:
+      Bson:
+        required: true
+        description: The []byte to parse into a bson object
+        samp: " "
+    outputs:
+      Record:
+        description: The bson object
   date_format@1.0:
     inputs:
       Date:

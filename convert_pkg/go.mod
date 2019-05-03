@@ -5,5 +5,6 @@ go 1.12
 require (
 	github.com/apptreesoftware/go-workflow v0.0.0-20190417191803-3da7584c654b
 	github.com/json-iterator/go v1.1.5
+	github.com/mongodb/mongo-go-driver v0.3.0
 	github.com/pkg/errors v0.8.1
 )

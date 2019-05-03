@@ -7,5 +7,6 @@ import (
 func main() {
 	step.Register(CachePush{})
 	step.Register(CachePull{})
+	step.Register(CachePullBulk{})
 	step.Run()
 }

@@ -14,6 +14,8 @@ func main() {
 	step.Register(QueueChildren{})
 	step.Register(TargetedParseLine{})
 	step.Register(ParseBuildString{})
+	step.Register(HashString{})
+	step.Register(ParseBsonObject{})
 
 	step.Run()
 }
