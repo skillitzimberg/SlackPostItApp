@@ -107,6 +107,10 @@ Make sure that the package that includes the steps you want to publish is includ
 **ERROR** `Could not find a package.yaml in convert_pk `  
 **Problem**   
 **Solutions:**  
+
+**ERROR** `make: *** No rule to make target publish-cache_pkg.  Stop.`
+**Problem**   
+**Solutions:**  
 - 
 
 ### Publishing a Workflow
