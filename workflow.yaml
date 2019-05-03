@@ -1,6 +1,8 @@
-#package_overrides:
-#  convert:
-#    host: localhost:4000
+package_overrides:
+  convert:
+    host: localhost:4000
+  cache:
+    host: localhost:4001
 workflows:
   SlackPostIt:
     triggers:
@@ -8,9 +10,7 @@ workflows:
         response: postIts
         response_content_type: application/json
     vars:
-#      connectionString: "postgres://postgres:@localhost:5432?sslmode=disable"
-      connectionString: "https://edff5a8a.ngrok.io:5432?sslmode=disable"
-      template : {"type": "mrkdwn","text": "{{range .postItRecords}} (Item {{.id}}) - {{.category}}: {{.note}}\n\n{{end}}"}
+      cacheTemplate : {"type": "mrkdwn","text": "{{range .postItRecords}} {{.category}}: {{.note}}\n\n{{end}}"}
     steps:
       - convert:parse_line@1.0:
           debug: true
@@ -29,60 +29,76 @@ workflows:
             StringFields:
               Request: 1
           outputs:
-            Record: Request
+            Record: Text
       - convert:targeted_line_parse@1.0:
           debug: true
           inputs:
-            String: ${Request.Request}
+            String: ${Text.Request}
             Delimiter: "+"
             Indices: 2
             StringFields:
               action: 0
               unparsedSegment: 1
           outputs:
-            Record: sqlParameters
+            Record: actionParsed
       - convert:targeted_line_parse@1.0:
-          run_if: '${sqlParameters.action} == "post"'
+          run_if: '${actionParsed.action} == "post"'
           debug: true
           inputs:
-            String: ${sqlParameters.unparsedSegment}
+            String: ${actionParsed.unparsedSegment}
             Delimiter: "+"
             Indices: 2
             StringFields:
               category: 0
               unparsedNote: 1
           outputs:
-            Record: categoryNote
+            Record: categoryParsed
       - convert:parse_build_string@1.0:
-          run_if: '${sqlParameters.action} == "post"'
+          run_if: '${actionParsed.action} == "post"'
           debug: true
           inputs:
-            String: ${categoryNote.unparsedNote}
+            String: ${categoryParsed.unparsedNote}
             Delimiter: "+"
           outputs:
             NewString: note
-      - postgres:execute@1.0:
-          run_if: '${sqlParameters.action} == "post"'
+      - convert:hash_string@1.0:
+          run_if: '${actionParsed.action} == "post"'
           debug: true
           inputs:
-            ConnectionString: ${connectionString}
-            Sql: "INSERT INTO post_it (category, note) VALUES (\'${categoryNote.category}\', \'${note}\');"
-      - postgres:execute@1.0:
-          run_if: '${sqlParameters.action} == "delete"'
-          debug: true
-          inputs:
-            ConnectionString: ${connectionString}
-            Sql: "DELETE FROM post_it WHERE id = \'${sqlParameters.unparsedSegment}\';"
-      - postgres:query@1.0:
-          run_if: '${sqlParameters.action} == "get"'
-          debug: true
-          inputs:
-            ConnectionString: ${connectionString}
-            Sql: "SELECT * FROM post_it WHERE category = \'${sqlParameters.unparsedSegment}\';"
+            note: ${note}
+            category: ${categoryParsed.category}
           outputs:
-            Results: rawPostIts
+            Record: record
+            Hash: hashedNote
+      - cache:push@1.0:
+          run_if: '${actionParsed.action} == "post"'
+          debug: true
+          inputs:
+            Record: ${record}
+            Id: ${hashedNote}
+            CacheName: 'PostIts'
+#      - cache:pull@1.0:
+#          run_if: '${actionParsed.action} == "get"'
+#          debug: true
+#          inputs:
+#            Id: ${hashedNote}
+#            Category: ${actionParsed.unparsedSegment}
+#            CacheName: 'PostIts'
+#          outputs:
+#            Records: rawPostIts
+#            Found: ok
+      - cache:pull_bulk@1.0:
+          run_if: '${actionParsed.action} == "get"'
+          debug: true
+          inputs:
+            Category: ${actionParsed.unparsedSegment}
+            CacheName: 'PostIts'
+            Limit: 5
+          outputs:
+            Records: rawPostIts
+            Found: ok
       - convert:set_fields@1.0:
-          run_if: '${sqlParameters.action} == "get"'
+          run_if: '${actionParsed.action} == "get"'
           debug: true
           inputs:
             Fields:
@@ -90,15 +106,15 @@ workflows:
           outputs:
             Record: postItJson
       - common:template@1.0:
-          run_if: '${sqlParameters.action} == "get"'
+          run_if: '${actionParsed.action} == "get"'
           debug: true
           inputs:
             Record: ${postItJson}
-            Template: ${template.toString()}
+            Template: ${cacheTemplate.toString()}
           outputs:
             Output: templatedPostIts
       - convert:parse_json_object@1.0:
-          run_if: '${sqlParameters.action} == "get"'
+          run_if: '${actionParsed.action} == "get"'
           debug: true
           inputs:
             String: ${templatedPostIts}
@@ -108,3 +124,4 @@ workflows:
 # RUNNING & TESTING THE WORKFLOW:
 # apptree run workflow -f workflows/SlackPostIt/workflow.yaml --id SlackPostIt
 # apptree publish workflow -f workflows/SlackPostIt/workflow.yaml -project surfrating.commandinghands.com
+
