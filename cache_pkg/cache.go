@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/apptreesoftware/go-workflow/pkg/step"
+	"github.com/mongodb/mongo-go-driver/bson"
+
 	//"github.com/mongodb/mongo-go-driver/bson"
 )
 
@@ -101,7 +103,8 @@ func (CachePullBulk) Execute(in step.Context) (interface{}, error) {
 	}
 
 	engine := in.Engine()
-	//records := make([]Records, 0)
+	record := Record{}
+	records := make([]Record, 0)
 	filter := &MyFilter{category: input.Category}
 	found, err := engine.Find(filter, input.CacheName, input.Limit)
 	if err != nil {
@@ -113,18 +116,19 @@ func (CachePullBulk) Execute(in step.Context) (interface{}, error) {
 	}
 
 	fmt.Printf("found: %v\n", found)
-	bsonString := fmt.Sprintf("%b", found)
-	fmt.Printf("found: %v\n", bsonString)
 
-	//err = bson.Unmarshal(found[0].Record, &records)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//fmt.Printf("found: %v\n", records)
+	for i, _ := range found {
+		err = bson.Unmarshal(found[i].Record, &record)
+		if err != nil {
+			return nil, err
+		}
+		records = append(records, record)
+	}
+
+	fmt.Printf("records: %v\n", records)
 
 	return pullBulkOutput{
-		BsonString: bsonString,
+		Records: records,
 	}, nil
 }
 
@@ -135,7 +139,7 @@ type pullBulkInput struct {
 }
 
 type pullBulkOutput struct {
-	BsonString string
+	Records []Record
 	Found  bool
 }
 
@@ -144,9 +148,9 @@ type MyFilter struct {
 }
 
 type Record struct {
-	Id string
-	Category string
-	Note string
+	Id string	`bson:"id" json:"id"`
+	Category string	`bson:"category" json:"category"`
+	Note string	`bson:"note" json:"note"`
 }
 
 type Records struct {
